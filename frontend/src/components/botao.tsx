@@ -8,7 +8,7 @@ type BotaoProps = {
 
 function Botao({texto, cor, hover}: BotaoProps) {
     return (
-        <button className={`flex gap-2 ${cor} text-white px-4 py-3 rounded-[13px] ${hover}`}>{texto}</button>
+        <button className={`flex gap-2 ${cor} text-white px-4 py-3 rounded-[13px] ${hover} cursor-pointer`}>{texto}</button>
     )
 }
 
