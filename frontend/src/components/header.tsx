@@ -6,7 +6,7 @@ import Sobre from "../pages/sobre";
 
 function Header() {
   return (
-    <header className="min-h-[77vh] w-[60vw]">
+    <header className="min-h-[78vh] w-[60vw]">
       <Navbar />
       <Routes>
         <Route path="/" element={<Inicio />} />
