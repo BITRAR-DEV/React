@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Botao from "../components/botao";
 import { Gamepad2 } from "lucide-react";
 import Logo from "../assets/Logo.png";
 
