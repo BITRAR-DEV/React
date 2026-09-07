@@ -3,8 +3,8 @@ import Foto from "../assets/435494488_1094963621543709_8267387487772838812_n.jpg
 
 function Sobre() {
   return (
-    <div>
-      <div className="m-[40px_0] flex flex-row justify-around text-violet-900">
+    <div className="px-20">
+      <div className="py-10 flex flex-row justify-around text-violet-900">
         <div className="w-100">
           <img src={Foto} alt="" className="size-87.5 rounded-[50%]" />
         </div>
@@ -20,7 +20,7 @@ function Sobre() {
           </p>
         </div>
       </div>
-      <div className="m-5 grid grid-cols-4 text-violet-900">
+      <div className="p-5 grid grid-cols-4 text-violet-900">
         <div className="flex w-60 flex-col items-center rounded-[10px] border border-zinc-950 p-2 shadow-[0_1px_5px] shadow-gray-700">
           <Gamepad2 size={32} />
           <h1 className="text-[20px] font-bold">Gamer</h1>

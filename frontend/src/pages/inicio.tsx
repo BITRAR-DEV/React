@@ -4,8 +4,8 @@ import Logo from "../assets/Logo.png";
 
 function Inicio() {
   return (
-    <div className="h-full grid grid-cols-2 px-6 my-14">
-      <div className="flex flex-col justify-center m-8 gap-6">
+    <div className="h-full grid grid-cols-2 px-6 py-8">
+      <div className="flex flex-col justify-center p-8 gap-6">
         <div className="leading-12 font-[650]">
           <h2 className="text-[60px] select-none">Bem-Vindo à</h2>
           <h1 className="text-violet-900 text-7xl text-shadow-[0_0_3px_rgb(112_7_231)] select-none">Game Stream!</h1>
@@ -19,7 +19,7 @@ function Inicio() {
         </div>
       </div>
       <div className="flex justify-center">
-        <img className="w-1/2 h-auto" src={Logo} alt="" />
+        <img className="w-1/2 h-full" src={Logo} alt="" />
       </div>
     </div>
   );

@@ -42,12 +42,12 @@ const joguinhos = [
 function Jogos() {
   return (
     <div>
-      <div className="mt-8 mb-4 flex justify-center">
+      <div className="py-4 flex justify-center">
         <h1 className="text-[40px] font-bold text-violet-900">
           Catálogo de Jogos
         </h1>
       </div>
-      <div className="flex justify-around">
+      <div className="flex justify-around px-40 pb-10">
         {joguinhos.map((jogo) => (
           <div key={jogo.id}>
             <CardItem

@@ -5,9 +5,9 @@ import Outlet from "./components/outlet";
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-blue-50">
+    <div className="min-h-screen bg-blue-50">
       <Header />
-      <main className="flex-1">
+      <main>
         <Outlet />
       </main>
       <Footer />

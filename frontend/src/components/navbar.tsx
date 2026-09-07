@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Gamepad2 } from "lucide-react";
 
 
@@ -9,9 +9,9 @@ function Navbar() {
             : "p-[8px_6px] hover:bg-violet-900 rounded-xl";
 
   return (
-    <nav className="flex items-center justify-between bg-violet-800 p-5 text-[18px] font-medium text-white shadow-[0_0_30px] shadow-gray-800 w-full">
+    <nav className="flex items-center justify-between bg-violet-800 p-4 text-[18px] font-medium text-white shadow-[0_0_10px] shadow-gray-800 w-full">
       <div className="flex gap-2">
-        <h1 className="text-4xl cursor-default select-none">Game Stream</h1> <Gamepad2 size={48} />
+        <Link to="/" className="text-3xl flex gap-2 cursor-pointer select-none">Game Stream <Gamepad2 size={42  } /></Link> 
       </div>
       <div className="flex gap-6">
         <NavLink className={estiloLink} end to="/">Inicio</NavLink>
