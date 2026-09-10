@@ -13,7 +13,9 @@ function Navbar() {
       <div className="flex gap-2">
         <Link to="/" className="text-3xl flex gap-2 cursor-pointer select-none">Game Stream <Gamepad2 size={42  } /></Link> 
       </div>
-      <div className="flex gap-6">
+
+
+      <div className="hidden md:flex gap-6">
         <NavLink className={estiloLink} end to="/">Inicio</NavLink>
         <p className="p-[8px_0] select-none">|</p>
         <NavLink className={estiloLink} to="/jogos">Jogos</NavLink>

@@ -4,7 +4,7 @@ import { Gamepad2, Mail } from "lucide-react";
 function Footer() {
   return (
     <footer className="bg-violet-800">
-        <div className="grid grid-cols-3 py-3 px-4">
+        <div className="grid md:grid-cols-3 py-3 gap-y-4 px-4">
             <div className="flex gap-1 text-[18px] font-medium text-white cursor-default select-none">
                 <Gamepad2 size={26} /> <h1>Game Stream</h1>
             </div>
@@ -12,7 +12,7 @@ function Footer() {
                 <h1 className="pb-2">Navegações</h1>
                 <div className="flex flex-col text-[12px] gap-1.5">
                     <Link to="/" className="max-w-fit">Início</Link>
-                    <Link to="/jogoss" className="max-w-fit">Jogos</Link>
+                    <Link to="/jogos" className="max-w-fit">Jogos</Link>
                     <Link to="/sobre" className="max-w-fit">Sobre Mim</Link>
                 </div>
             </div>
