@@ -22,7 +22,7 @@ function Sobre() {
       id: 3,
       icone: <Book size={32} />,
       titulo: "Estudante",
-      paragrafo: "Além de jogos como hobby, gosto de fazer desenhos artisticos, como graffiti, personagens, letreiros, etc."
+      paragrafo: "Sou estudante de TI no Curso Técnico em Informática do Senac Salto."
     },
     {
       id: 4,
