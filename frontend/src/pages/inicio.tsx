@@ -12,7 +12,7 @@ function Inicio() {
         </div>
         <div className="text-[18px]">
           <p className="md:leading-6.5">Aqui você encontra vários jogos grátis para jogar e se divertir com a melhor experiência de jogos da web.</p>
-          <p className="mt-2 md:leading-12">Entre abaixo em nosso catálogo e explore nossos jogos.</p>
+          <p className="mt-2">Entre abaixo em nosso catálogo e explore nossos jogos.</p>
         </div>
         <div className="flex flex-row">
           <Link className="flex gap-2 text-white px-4 py-3 rounded-[13px] cursor-pointer bg-violet-700 hover:bg-violet-800" to="/jogos"><><Gamepad2 size={24} />Explorar Catálago</></Link>
