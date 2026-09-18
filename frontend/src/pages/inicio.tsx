@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Gamepad2 } from "lucide-react";
 import Logo from "../assets/Logo.png";
 
-function Inicio() {
+export default function Inicio() {
   return (
     <div className="h-full md:grid md:grid-cols-2 px-6 py-8">
       <div className="flex flex-col justify-center p-8 md:pl-50 gap-6">
@@ -24,5 +24,3 @@ function Inicio() {
     </div>
   );
 }
-
-export default Inicio;

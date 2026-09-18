@@ -2,7 +2,7 @@ import { Gamepad2, CodeXml, Pencil, Book, User } from "lucide-react";
 import Foto from "../assets/435494488_1094963621543709_8267387487772838812_n.jpg";
 import { useState, useEffect } from "react";
 
-function Sobre() {
+export default function Sobre() {
   const [atual, setAtual] = useState(0);
 
   const cards = [
@@ -90,5 +90,3 @@ function Sobre() {
     </div>
   );
 }
-
-export default Sobre;
