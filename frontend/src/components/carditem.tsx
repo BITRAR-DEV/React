@@ -15,7 +15,7 @@ function CardItem({name, image, desc, text, click}: CardInfos) {
             <h2 className="font-bold text-[1.2em] mb-1 text-violet-950">{name}</h2>
             <p className="text-center text-[0.9em]">{desc}</p>
             <div className="flex flex-col mt-auto p-1">
-                <button className="flex gap-2 text-white px-4 py-3 rounded-[13px] cursor-pointer mt-2 bg-violet-700 hover:bg-violet-800" onClick={click}>{text}</button>
+                <button className="flex gap-2 text-white px-4 py-3 rounded-[13px] cursor-pointer mt-2 bg-violet-800 hover:bg-violet-900" onClick={click}>{text}</button>
             </div>
         </div>
     )

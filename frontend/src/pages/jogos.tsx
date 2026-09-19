@@ -64,7 +64,7 @@ type Jogo = {
   estrelas: number;
 };
 
-function Jogos() {
+export default function Jogos() {
   const [atual, setAtual] = useState(0);
   const [animando, setAnimando] = useState(false);
 
@@ -176,4 +176,3 @@ function Jogos() {
   );
 }
 
-export default Jogos;
