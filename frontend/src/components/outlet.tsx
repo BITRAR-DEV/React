@@ -3,6 +3,7 @@ import Inicio from "../pages/inicio";
 import Jogos from "../pages/jogos";
 import Sobre from "../pages/sobre";
 import Login from "../pages/login";
+import Cadastro from "../pages/cadastro";
 function Outlet() {
     return (
         <Routes>
@@ -10,6 +11,7 @@ function Outlet() {
             <Route path="/jogos" element={<Jogos />} />
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/cadastro" element={<Cadastro />} />
         </Routes>
     );
 }
