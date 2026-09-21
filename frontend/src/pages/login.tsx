@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 const api = import.meta.env.VITE_API_URL;
 
 export default function Login() {
+  const navigate = useNavigate();
   const [mostrar, setMostrar] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -12,14 +15,17 @@ export default function Login() {
   });
 
   const [ loginErro, setLoginErro ] = useState("")
+  const auth = useContext(AuthContext);
 
   async function logar(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoginErro("");
+    
 
     try {
       const resposta = await fetch(`${api}/login`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: form.email,
@@ -33,11 +39,14 @@ export default function Login() {
         throw new Error(login.erro);
       }
 
-      console.log(login);
+      auth?.setUsuario(login.usuario);
+
       setForm({
         email: "",
         senha: "",
       });
+      
+      navigate("/perfil");
     } catch (error) {
         const mensagem =
         error instanceof Error ? error.message : "Erro inesperado!";

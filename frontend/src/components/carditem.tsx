@@ -8,7 +8,7 @@ type CardInfos = {
     click: () => void;
 }
 
-function CardItem({name, image, desc, text, click}: CardInfos) {
+export default function CardItem({name, image, desc, text, click}: CardInfos) {
     return (
         <div className="flex flex-col items-center w-55 h-full border border-zinc-950 rounded-[15px] shadow-[0_1px_5px] shadow-zinc-950 p-[20px_10px] transition-[scale] hover:scale-105">
             <img src={image} alt="" className="size-40 mb-2"/>
@@ -20,5 +20,3 @@ function CardItem({name, image, desc, text, click}: CardInfos) {
         </div>
     )
 }
-
-export default CardItem;

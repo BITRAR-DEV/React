@@ -53,6 +53,8 @@ const joguinhos = [
   },
 ];
 
+const API_KEY = "0bbafa70bc474534b89bd7b12e01ec53";
+
 type Jogo = {
   id: number;
   name: string;

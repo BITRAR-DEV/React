@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Gamepad2, Menu } from "lucide-react";
 
-function Navbar() {
+export default function Navbar() {
   const estiloLink = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "underline p-[8px_6px] bg-violet-950 rounded-xl"
@@ -58,5 +58,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default Navbar;

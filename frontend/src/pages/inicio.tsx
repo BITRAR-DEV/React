@@ -1,8 +1,12 @@
+import { use, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Gamepad2 } from "lucide-react";
 import Logo from "../assets/Logo.png";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function Inicio() {
+  const auth = useContext(AuthContext);
+
   return (
     <div className="h-full md:grid md:grid-cols-2 px-6 py-8">
       <div className="flex flex-col justify-center p-8 md:pl-50 gap-6">
@@ -11,7 +15,7 @@ export default function Inicio() {
           <h1 className="text-violet-900 text-7xl text-shadow-[0_0_3px_rgb(112_7_231)] select-none">Game Stream!</h1>
         </div>
         <div className="text-[18px]">
-          <p className="md:leading-6.5">Aqui você encontra vários jogos grátis para jogar e se divertir com a melhor experiência de jogos da web.</p>
+          <p className="md:leading-6.5">Olá {auth?.usuario?.nome} Aqui você encontra vários jogos grátis para jogar e se divertir com a melhor experiência de jogos da web.</p>
           <p className="mt-2">Entre abaixo em nosso catálogo e explore nossos jogos.</p>
         </div>
         <div className="flex flex-row">

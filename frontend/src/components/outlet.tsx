@@ -4,8 +4,9 @@ import Jogos from "../pages/jogos";
 import Sobre from "../pages/sobre";
 import Login from "../pages/login";
 import Cadastro from "../pages/cadastro";
+import Perfil from "../pages/perfil";
 
-function Outlet() {
+export default function Outlet() {
     return (
         <Routes>
             <Route path="/" element={<Inicio />} />
@@ -13,8 +14,7 @@ function Outlet() {
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/perfil" element={<Perfil />} />
         </Routes>
     );
 }
-
-export default Outlet;

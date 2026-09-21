@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Gamepad2, Mail } from "lucide-react";
 
-function Footer() {
+export default function Footer() {
   return (
     <footer className="bg-violet-900">
         <div className="grid md:grid-cols-3 py-3 gap-y-4 px-4">
@@ -27,5 +27,3 @@ function Footer() {
     </footer>
   );
 }
-
-export default Footer;
