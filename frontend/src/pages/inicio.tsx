@@ -15,7 +15,7 @@ export default function Inicio() {
           <p className="mt-2">Entre abaixo em nosso catálogo e explore nossos jogos.</p>
         </div>
         <div className="flex flex-row">
-          <Link className="flex gap-2 text-white px-4 py-3 rounded-[13px] cursor-pointer bg-violet-700 hover:bg-violet-800" to="/jogos"><><Gamepad2 size={24} />Explorar Catálago</></Link>
+          <Link className="flex gap-2 text-white px-4 py-3 rounded-[13px] cursor-pointer bg-violet-800 hover:bg-violet-900" to="/jogos"><><Gamepad2 size={24} />Explorar Catálago</></Link>
         </div>
       </div>
       <div className="hidden md:flex justify-center">

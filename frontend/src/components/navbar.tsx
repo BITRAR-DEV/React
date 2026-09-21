@@ -5,13 +5,13 @@ import { Gamepad2, Menu } from "lucide-react";
 function Navbar() {
   const estiloLink = ({ isActive }: { isActive: boolean }) =>
     isActive
-      ? "underline p-[8px_6px] bg-violet-900 rounded-xl"
-      : "p-[8px_6px] hover:bg-violet-900 rounded-xl";
+      ? "underline p-[8px_6px] bg-violet-950 rounded-xl"
+      : "p-[8px_6px] hover:bg-violet-950 rounded-xl";
   
   const [aberto, setAberto] = useState(false);
     
   return (
-    <nav className="flex w-full items-center justify-between bg-violet-800 p-4 text-[18px] font-medium text-white shadow-[0_0_10px] shadow-gray-800">
+    <nav className="flex w-full items-center justify-between bg-violet-900 p-4 text-[18px] font-medium text-white shadow-[0_0_10px] shadow-gray-800">
       <div className="flex gap-2">
         <Link to="/" className="flex cursor-pointer gap-2 text-3xl select-none">
           Game Stream <Gamepad2 size={42} />
@@ -24,7 +24,7 @@ function Navbar() {
         </button>
 
         <div
-          className={`fixed top-15 -right-px flex flex-col items-center gap-4 overflow-hidden rounded-bl-xl bg-violet-800 transition-all duration-500 ease-in-out md:hidden ${
+          className={`fixed top-15 -right-px flex flex-col items-center gap-4 overflow-hidden rounded-bl-xl bg-violet-900 transition-all duration-500 ease-in-out md:hidden ${
             aberto ? "max-h-60 p-5 opacity-100" : "max-h-0 p-0 opacity-0"
           } `}
         >
