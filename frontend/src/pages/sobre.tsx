@@ -65,7 +65,7 @@ export default function Sobre() {
           }}
         >
           {cards.map((card) => (
-          <div key={card.id} className="min-w-full md:min-w-0 md:w-60 flex flex-col items-center rounded-[10px] border border-zinc-950 p-2 shadow-[0_1px_5px] shadow-gray-700">
+          <div key={card.id} className="bg-blue-50 min-w-full md:min-w-0 md:w-60 flex flex-col items-center rounded-[10px] border border-zinc-950 p-2 shadow-[0_1px_5px] shadow-gray-700">
             {card.icone}
             <h1 className="text-[20px] font-bold">{card.titulo}</h1>
             <p className="text-center">
@@ -78,7 +78,7 @@ export default function Sobre() {
 
       <div className="hidden p-5 gap-10 md:flex justify-center md:gap-[2%] text-violet-900">
         {cards.map((card) => (
-          <div key={card.id} className="min-w-full md:min-w-0 md:w-60 flex flex-col items-center rounded-[10px] border border-zinc-950 p-2 shadow-[0_1px_5px] shadow-gray-700">
+          <div key={card.id} className="bg-blue-50 min-w-full md:min-w-0 md:w-60 flex flex-col items-center rounded-[10px] border border-zinc-950 p-2 shadow-[0_1px_5px] shadow-gray-700">
             {card.icone}
             <h1 className="text-[20px] font-bold">{card.titulo}</h1>
             <p className="text-center">

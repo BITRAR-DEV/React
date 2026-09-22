@@ -61,7 +61,7 @@ export default function Cadastro() {
 
   return (
     <div className="flex items-center justify-center px-6 py-8">
-      <div className="h-full rounded-[15px] border border-zinc-950 p-6 shadow-[0_1px_5px] shadow-zinc-950 md:w-120">
+      <div className="bg-blue-50 h-full rounded-[15px] border border-zinc-950 p-6 shadow-[0_1px_5px] shadow-zinc-950 md:w-120">
         <div className="mb-6 flex flex-col items-center justify-center">
           <h2 className="mb-1 text-3xl font-bold text-violet-950">
             Bem Vindo!
