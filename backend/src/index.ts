@@ -3,6 +3,7 @@ import cors from "cors";
 import prisma from "./lib/prisma.js";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import { log } from "node:console";
 
 const app = express();
 
@@ -56,7 +57,8 @@ app.get("/me", async (req, res) => {
       select: {
         id: true,
         nome: true,
-        email: true
+        email: true,
+        nick: true,
       }
     });
 
@@ -66,25 +68,41 @@ app.get("/me", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
-  const { email, senha } = req.body;
+app.get("/usuarios/:nick", async (req, res) => {
+  const { nick } = req.params;
 
-    if (!email || !senha) {
+  const usuario = await prisma.usuario.findUnique({
+    where: {
+      nick: nick,
+    }
+  })
+  return res.json(usuario)
+});
+
+app.post("/login", async (req, res) => {
+  const { loginID, senha} = req.body;
+
+    if (!loginID || !senha) {
     return res
       .status(400)
-      .json({ erro: "Email e Senha são obrigatórios" });
+      .json({ erro: "Email ou Nick e Senha são obrigatórios" });
   }
 
   try {
-    const usuario = await prisma.usuario.findUnique({
+    
+
+    const usuario = await prisma.usuario.findFirst({
       where: {
-        email: email,
+        OR: [
+          { email: loginID },
+          { nick: loginID }
+        ]
       },
     });
     
     if (!usuario) {
         return res.status(401).json({
-            erro: "Email ou Senha Incorretos"
+            erro: "Email, Nick ou Senha Incorretos"
         });
     }
 
@@ -101,7 +119,8 @@ app.post("/login", async (req, res) => {
           usuario: {
             id: usuario.id,
             nome: usuario.nome,
-            email: usuario.email
+            email: usuario.email,
+            nick: usuario.nick
           }
       });
     };
@@ -111,23 +130,35 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/usuarios", async (req, res) => {
-  const { nome, email, senha } = req.body;
+  const { nome, email, senha, nick } = req.body;
 
-  if (!nome || !email || !senha) {
+  if (!nome || !email || !senha || !nick) {
     return res
       .status(400)
-      .json({ erro: "Nome, Email e Senha são obrigatórios" });
+      .json({ erro: "Nome, Nick, Email e Senha são obrigatórios" });
   }
 
   
   try {
     const usuarioExistente = await prisma.usuario.findUnique({
         where: {
+            nick: nick
+        }
+    })
+
+    const emailExistente = await prisma.usuario.findUnique({
+        where: {
             email: email
         }
     })
     
     if (usuarioExistente) {
+        return res.status(409).json({
+            erro: "Já existe uma conta vínculada à esse nick!"
+        })
+    }
+    
+    if (emailExistente) {
         return res.status(409).json({
             erro: "Já existe uma conta vínculada à esse email!"
         })
@@ -140,6 +171,7 @@ app.post("/usuarios", async (req, res) => {
         nome,
         email,
         senha: senhaHash,
+        nick,
       },
     });
 

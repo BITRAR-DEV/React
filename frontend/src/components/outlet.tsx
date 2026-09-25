@@ -14,7 +14,7 @@ export default function Outlet() {
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
-            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/perfil/:nick" element={<Perfil />} />
         </Routes>
     );
 }
