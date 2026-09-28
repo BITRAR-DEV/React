@@ -12,6 +12,7 @@ type Usuario = {
 type AuthContextType = {
   usuario: Usuario | null;
   setUsuario: React.Dispatch<React.SetStateAction<Usuario | null>>;
+  carregando: boolean;
 };
 
 
@@ -19,6 +20,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [carregando, setCarregando] = useState(true);
 
   async function verificar(){
     try {
@@ -30,13 +32,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
         if (resposta.ok) {
           setUsuario(dados);
-        }
+        } 
   
         console.log(dados)
     } catch (error) {
         const mensagem =
         error instanceof Error ? error.message : "Erro inesperado!";
         console.log(mensagem)
+    } finally {
+      setCarregando(false);
     }
   }
   
@@ -44,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     verificar();
   }, []);
   return (
-    <AuthContext value={{ usuario, setUsuario }}>
+    <AuthContext value={{ usuario, setUsuario, carregando }}>
       {children}
     </AuthContext>
   );

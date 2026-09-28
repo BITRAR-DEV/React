@@ -1,10 +1,19 @@
-import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { NavLink, Navigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { Eye, EyeOff, Moon, Sun } from "lucide-react";
+import { AuthContext } from "../contexts/AuthContext";
 
 const api = import.meta.env.VITE_API_URL;
 
 export default function Cadastro() {
+  const auth = useContext(AuthContext);
+  if (auth?.carregando) {
+    return <p>Carregando...</p>;
+  }
+  
+   if (auth?.usuario) {
+    return <Navigate to="/perfil" replace />; 
+  }
   const [mostrar, setMostrar] = useState(false);
 
   const [temaEscuro, setTemaEscuro] = useState(false);
@@ -106,7 +115,7 @@ export default function Cadastro() {
       className={`min-h-screen px-6 py-8 transition-colors duration-300 ${
         temaEscuro
           ? "bg-[#17131f] text-white"
-          : "bg-white text-violet-950"
+          : "bg-blue-100 text-violet-950"
       }`}
     >
       {/* BOTÃO DE TEMA */}

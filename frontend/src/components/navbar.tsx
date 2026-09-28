@@ -13,7 +13,7 @@ export default function Navbar() {
   const [aberto, setAberto] = useState(false);
 
   return (
-    <nav className="flex w-full items-center justify-between bg-violet-900 p-4 text-[18px] font-medium text-white shadow-[0_0_10px] shadow-gray-800">
+    <nav className="flex w-full items-center justify-between bg-violet-950 p-4 text-[18px] font-medium text-white shadow-[0_0_10px] shadow-gray-800">
       <div className="flex gap-2">
         <Link to="/" className="flex cursor-pointer gap-2 text-3xl select-none">
           Game Stream <Gamepad2 size={42} />

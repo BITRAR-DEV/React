@@ -387,7 +387,7 @@ export default function Jogos() {
         {!carregando && modoExibicao === "grid" && (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {jogos.map((jogo) => (
-              <article
+              <div
                 key={jogo.id}
                 className={`overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
                   temaEscuro
@@ -418,16 +418,6 @@ export default function Jogos() {
                     {jogo.name}
                   </h2>
 
-                  <p
-                    className={`mt-2 line-clamp-3 text-sm ${
-                      temaEscuro
-                        ? "text-gray-300"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {jogo.description_raw}
-                  </p>
-
                   <div className="mt-4 flex items-center justify-between">
                     <span
                       className={`text-sm ${
@@ -447,7 +437,7 @@ export default function Jogos() {
                     </button>
                   </div>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         )}
@@ -456,7 +446,7 @@ export default function Jogos() {
         {!carregando && modoExibicao === "list" && (
           <div className="flex flex-col gap-5">
             {jogos.map((jogo) => (
-              <article
+              <div
                 key={jogo.id}
                 className={`flex flex-col overflow-hidden rounded-2xl border shadow-md transition md:flex-row ${
                   temaEscuro
@@ -487,16 +477,6 @@ export default function Jogos() {
                         {jogo.rating?.toFixed(1)}
                       </span>
                     </div>
-
-                    <p
-                      className={`mt-3 ${
-                        temaEscuro
-                          ? "text-gray-300"
-                          : "text-gray-600"
-                      }`}
-                    >
-                      {jogo.description_raw}
-                    </p>
                   </div>
 
                   <div className="mt-5 flex items-center justify-between gap-3">
@@ -519,7 +499,7 @@ export default function Jogos() {
                     </button>
                   </div>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         )}
@@ -528,7 +508,7 @@ export default function Jogos() {
       {/* MODAL */}
       <dialog
         ref={modal}
-        className={`m-auto w-[90%] max-w-4xl overflow-hidden rounded-2xl border-2 border-violet-800 p-0 shadow-2xl backdrop:bg-black/70 ${
+        className={`m-auto w-[90%] max-w-4xl rounded-2xl border-2 border-violet-800 p-0 shadow-2xl backdrop:bg-black/70 ${
           temaEscuro
             ? "bg-[#211b2b] text-white"
             : "bg-white text-violet-950"
@@ -566,24 +546,6 @@ export default function Jogos() {
 
                   {jogoSelecionado.rating?.toFixed(1)}/5
                 </div>
-              </div>
-
-              <div
-                className={`mt-6 leading-relaxed ${
-                  temaEscuro
-                    ? "text-gray-300"
-                    : "text-gray-700"
-                }`}
-              >
-                {jogoSelecionado.description_raw ? (
-                  <p>
-                    {limparHTML(
-                      jogoSelecionado.description_raw
-                    )}
-                  </p>
-                ) : (
-                  <p>{jogoSelecionado.description_raw}</p>
-                )}
               </div>
 
               {/* INFORMAÇÕES */}
@@ -640,18 +602,23 @@ export default function Jogos() {
                     </div>
                   </div>
                 )}
-
-              {/* SITE */}
-              {jogoSelecionado.website && (
-                <a
-                  href={jogoSelecionado.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-6 inline-block rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800"
-                >
-                  Site oficial
-                </a>
-              )}
+              <div className="flex gap-1">
+                {/*ADICIONAR LISTA*/}
+                <button className="mt-6 inline-block rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800">
+                  Adicionar em Minha Lista
+                </button>
+                {/* SITE */}
+                {jogoSelecionado.website && (
+                  <a
+                    href={jogoSelecionado.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-6 inline-block rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800"
+                  >
+                    Site oficial
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         )}

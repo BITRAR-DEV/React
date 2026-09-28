@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 
 const api = import.meta.env.VITE_API_URL;
@@ -49,13 +49,13 @@ export default function Perfil() {
 
   return (
     <div
-      className={`min-h-screen px-6 py-8 transition-colors duration-300 ${
+      className={`flex justify-center items-center flex-col px-6 py-8 transition-colors duration-300 ${
         temaEscuro
           ? "bg-[#17131f] text-white"
           : "bg-blue-100 text-violet-950"
       }`}
     >
-      <div className="flex justify-end">
+      <div className="self-end">
         <button
           onClick={mudarTema}
           className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold transition ${
@@ -77,8 +77,23 @@ export default function Perfil() {
           )}
         </button>
       </div>
+      <div className={`flex flex-col justify-center items-center mt-8 w-[70vw] rounded-2xl overflow-hidden ${temaEscuro? "bg-violet-950" : "bg-cyan-100"}`}>
+        <div className={`shadow-[0_0_10px] shadow-gray-400`}>
+          <img src="https://placehold.co/1024x150" alt="" />
+        </div>
+        <div className="flex w-full px-12 mb-4">
+          <div className="-mt-15 justify-self-start">
+            <img src="https://placehold.co/150x150" alt="" className={`rounded-[50%] border-8 ${temaEscuro? "border-violet-950" : "border-blue-200"}`}/>
+          </div>
+          <div className="flex flex-col ml-4 mt-4">
+            <h1 className="text-[22px]">{auth?.usuario?.nome}</h1>
+            <h2 className="text-[16px]">@{auth?.usuario?.nick}</h2>
+            <p>Adicionar Informações</p>
+          </div>
+        </div>
+        <div className=" ">
 
-      <div className="mt-8">
+        </div>
       </div>
     </div>
   );

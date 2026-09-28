@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Navigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -25,6 +25,13 @@ export default function Login() {
   const [temaEscuro, setTemaEscuro] = useState(false);
 
   const auth = useContext(AuthContext);
+  if (auth?.carregando) {
+    return <p>Carregando...</p>;
+  }
+  
+   if (auth?.usuario) {
+    return <Navigate to="/perfil" replace />;
+  }
 
   // Recupera o tema salvo
   useEffect(() => {
@@ -90,10 +97,10 @@ export default function Login() {
 
   return (
     <div
-      className={`min-h-screen px-6 py-8 transition-colors duration-300 ${
+      className={`px-6 p-[30px_0px_60px] transition-colors duration-300 ${
         temaEscuro
           ? "bg-[#17131f] text-white"
-          : "bg-white text-violet-950"
+          : "bg-blue-100 text-violet-950"
       }`}
     >
       {/* BOTÃO DE TEMA */}

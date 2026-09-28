@@ -3,7 +3,7 @@ import { Gamepad2, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-violet-900">
+    <footer className="bg-violet-950">
         <div className="grid md:grid-cols-3 py-3 gap-y-4 px-4">
             <div className="flex gap-1 text-[18px] font-medium text-white cursor-default select-none">
                 <Gamepad2 size={26} /> <h1>Game Stream</h1>

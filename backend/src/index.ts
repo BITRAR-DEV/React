@@ -3,7 +3,6 @@ import cors from "cors";
 import prisma from "./lib/prisma.js";
 import bcrypt from "bcrypt";
 import session from "express-session";
-import { log } from "node:console";
 
 const app = express();
 

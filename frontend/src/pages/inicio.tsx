@@ -74,7 +74,7 @@ export default function Inicio() {
 
           <div className="text-[18px]">
             <p className="md:leading-6.5">
-              Olá {auth?.usuario?.nome}! Aqui você encontra vários
+              Aqui você encontra vários
               jogos grátis para jogar e se divertir com a melhor
               experiência de jogos da web.
             </p>
