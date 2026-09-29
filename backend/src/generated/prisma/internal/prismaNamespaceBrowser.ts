@@ -51,7 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Usuario: 'Usuario'
+  Usuario: 'Usuario',
+  JogoUsuario: 'JogoUsuario'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,10 +76,22 @@ export const UsuarioScalarFieldEnum = {
   nome: 'nome',
   email: 'email',
   senha: 'senha',
-  nick: 'nick'
+  nick: 'nick',
+  fotoPerfil: 'fotoPerfil',
+  banner: 'banner',
+  bio: 'bio'
 } as const
 
 export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
+
+
+export const JogoUsuarioScalarFieldEnum = {
+  id: 'id',
+  rawgId: 'rawgId',
+  usuarioId: 'usuarioId'
+} as const
+
+export type JogoUsuarioScalarFieldEnum = (typeof JogoUsuarioScalarFieldEnum)[keyof typeof JogoUsuarioScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -95,4 +108,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

@@ -397,7 +397,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Usuario: 'Usuario'
+  Usuario: 'Usuario',
+  JogoUsuario: 'JogoUsuario'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario"
+    modelProps: "usuario" | "jogoUsuario"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -491,6 +492,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JogoUsuario: {
+      payload: Prisma.$JogoUsuarioPayload<ExtArgs>
+      fields: Prisma.JogoUsuarioFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JogoUsuarioFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JogoUsuarioFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>
+        }
+        findFirst: {
+          args: Prisma.JogoUsuarioFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JogoUsuarioFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>
+        }
+        findMany: {
+          args: Prisma.JogoUsuarioFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>[]
+        }
+        create: {
+          args: Prisma.JogoUsuarioCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>
+        }
+        createMany: {
+          args: Prisma.JogoUsuarioCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JogoUsuarioCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>[]
+        }
+        delete: {
+          args: Prisma.JogoUsuarioDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>
+        }
+        update: {
+          args: Prisma.JogoUsuarioUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>
+        }
+        deleteMany: {
+          args: Prisma.JogoUsuarioDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JogoUsuarioUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JogoUsuarioUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>[]
+        }
+        upsert: {
+          args: Prisma.JogoUsuarioUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JogoUsuarioPayload>
+        }
+        aggregate: {
+          args: Prisma.JogoUsuarioAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJogoUsuario>
+        }
+        groupBy: {
+          args: Prisma.JogoUsuarioGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JogoUsuarioGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JogoUsuarioCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JogoUsuarioCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -535,10 +610,22 @@ export const UsuarioScalarFieldEnum = {
   nome: 'nome',
   email: 'email',
   senha: 'senha',
-  nick: 'nick'
+  nick: 'nick',
+  fotoPerfil: 'fotoPerfil',
+  banner: 'banner',
+  bio: 'bio'
 } as const
 
 export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
+
+
+export const JogoUsuarioScalarFieldEnum = {
+  id: 'id',
+  rawgId: 'rawgId',
+  usuarioId: 'usuarioId'
+} as const
+
+export type JogoUsuarioScalarFieldEnum = (typeof JogoUsuarioScalarFieldEnum)[keyof typeof JogoUsuarioScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -555,6 +642,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -756,6 +851,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   usuario?: Prisma.UsuarioOmit
+  jogoUsuario?: Prisma.JogoUsuarioOmit
 }
 
 /* Types for Logging */

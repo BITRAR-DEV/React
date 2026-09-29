@@ -13,9 +13,24 @@ datasource db {
 }
 
 model Usuario {
-  id    Int    @id @default(autoincrement())
-  nome  String
-  email String @unique
-  senha String
-  nick  String @unique
+  id          Int    @id @default(autoincrement())
+  nome        String
+  email       String @unique
+  senha       String
+  nick        String @unique
+  fotoPerfil  String?
+  banner      String?
+  bio         String?
+  jogos       JogoUsuario[]
+}
+
+model JogoUsuario {
+  id        Int @id @default(autoincrement())
+
+  rawgId    Int
+
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@unique([usuarioId, rawgId])
 }

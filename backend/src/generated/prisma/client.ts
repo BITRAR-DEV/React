@@ -46,3 +46,8 @@ export { Prisma }
  * 
  */
 export type Usuario = Prisma.UsuarioModel
+/**
+ * Model JogoUsuario
+ * 
+ */
+export type JogoUsuario = Prisma.JogoUsuarioModel

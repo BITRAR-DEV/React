@@ -3,11 +3,13 @@ import cors from "cors";
 import prisma from "./lib/prisma.js";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import { use } from "react";
 
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173",
+  "https://knc059gg-5173.brs.devtunnels.ms"],
   credentials: true
   })
 );
@@ -76,6 +78,25 @@ app.get("/usuarios/:nick", async (req, res) => {
     }
   })
   return res.json(usuario)
+});
+
+app.patch("/foto", async (req, res) =>{
+  const { fotoPerfil } = req.body;
+
+  const userId = req.session.usuarioId;
+  
+  if (userId) {
+    return res.status(401).json({erro: "Não logado"})
+  }
+
+  const usuario = await prisma.usuario.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      fotoPerfil: fotoPerfil,
+    }
+  })
 });
 
 app.post("/login", async (req, res) => {
