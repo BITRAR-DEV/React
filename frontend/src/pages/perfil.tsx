@@ -12,13 +12,21 @@ export default function Perfil() {
 
   const [temaEscuro, setTemaEscuro] = useState(false);
 
+  type Usuario = {
+    id: number;
+    nome: string;
+    nick: string;
+  };
+
+  const [dados, setDados] = useState<Usuario | null>(null);
+
   async function buscarPerfil() {
     try {
       const resposta = await fetch(`${api}/usuarios/${nick}`);
 
-      const dados = await resposta.json();
+      const resultado = await resposta.json();
 
-      console.log(dados);
+      setDados(resultado);
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +69,7 @@ export default function Perfil() {
           className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold transition ${
             temaEscuro
               ? "bg-yellow-400 text-black hover:bg-yellow-300"
-              : "bg-violet-700 text-white hover:bg-violet-800"
+              : "bg-violet-950 text-white hover:bg-[#240658]"
           }`}
         >
           {temaEscuro ? (
@@ -86,12 +94,12 @@ export default function Perfil() {
             <img src="https://placehold.co/150x150" alt="" className={`rounded-[50%] border-8 ${temaEscuro? "border-violet-950" : "border-blue-200"}`}/>
           </div>
           <div className="flex flex-col ml-4 mt-4">
-            <h1 className="text-[22px]">{auth?.usuario?.nome}</h1>
-            <h2 className="text-[16px]">@{auth?.usuario?.nick}</h2>
+            <h1 className="text-[22px]">{dados?.nome}</h1>
+            <h2 className="text-[16px]">@{dados?.nick}</h2>
             <p>Adicionar Informações</p>
           </div>
         </div>
-        <div className=" ">
+        <div className="">
 
         </div>
       </div>

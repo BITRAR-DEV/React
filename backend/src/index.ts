@@ -93,8 +93,14 @@ app.post("/login", async (req, res) => {
     const usuario = await prisma.usuario.findFirst({
       where: {
         OR: [
-          { email: loginID },
-          { nick: loginID }
+          { email: {
+            equals: loginID,
+            mode: "insensitive"
+          }},
+          { nick: {
+            equals: loginID,
+            mode: "insensitive"
+          } }
         ]
       },
     });
