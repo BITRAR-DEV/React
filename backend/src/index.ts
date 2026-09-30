@@ -60,6 +60,7 @@ app.get("/me", async (req, res) => {
         nome: true,
         email: true,
         nick: true,
+        fotoPerfil: true,
       }
     });
 
@@ -85,7 +86,7 @@ app.patch("/foto", async (req, res) =>{
 
   const userId = req.session.usuarioId;
   
-  if (userId) {
+  if (!userId) {
     return res.status(401).json({erro: "Não logado"})
   }
 

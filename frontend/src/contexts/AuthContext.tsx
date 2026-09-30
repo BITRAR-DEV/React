@@ -7,6 +7,7 @@ type Usuario = {
   nome: string;
   email: string;
   nick: string;
+  fotoPerfil: string;
 };
 
 type AuthContextType = {

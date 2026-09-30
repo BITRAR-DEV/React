@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useParams } from "react-router-dom";
-import { Moon, Sun, Star, Pencil } from "lucide-react";
+import { Moon, Sun, Star, Pencil, Upload } from "lucide-react";
+import FotoPadrao from "../assets/FotoPadrao.jfif"
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -20,6 +21,7 @@ export default function Perfil() {
     id: number;
     nome: string;
     nick: string;
+    fotoPerfil: string;
   };
 
   const [dados, setDados] = useState<Usuario | null>(null);
@@ -81,17 +83,38 @@ export default function Perfil() {
     );
 
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    try {
+      const resposta = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+  
+      const dados = await resposta.json();
 
-    const resposta = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+      const atualizar = await fetch(`${api}/foto`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fotoPerfil: dados.secure_url,
+        }),
+      });
 
-    const dados = await resposta.json();
+      const atualizou = await atualizar.json();
 
+      if (!atualizou.ok) {
+        throw new Error(atualizou.erro);
+      }
+      
+    } catch (error) {
+      
+    }
+    
     
   }
 
@@ -145,7 +168,7 @@ export default function Perfil() {
           <div className="-mt-19 justify-self-start">
             <label htmlFor="fotoPerfil" className="cursor-pointer">
               <img
-                src="https://placehold.co/150x150"
+                src={dados?.fotoPerfil || FotoPadrao}
                 alt="Foto de perfil"
                 className={`h-37.5 w-37.5 rounded-full border-8 object-cover ${
                   temaEscuro ? "border-violet-950" : "border-slate-50"
@@ -201,7 +224,7 @@ export default function Perfil() {
 
             {/* CAMPO DE EDIÇÃO */}
             {editandoInfo && (
-              <div className="mt-3 w-[500px] max-w-full">
+              <div className="mt-3 w-125 max-w-full">
                 <textarea
                   value={informacoes}
                   onChange={(e) => setInformacoes(e.target.value)}

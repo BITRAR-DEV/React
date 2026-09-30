@@ -21,9 +21,17 @@ export default function Login() {
   });
 
   const [loginErro, setLoginErro] = useState("");
-
+  
   const [temaEscuro, setTemaEscuro] = useState(false);
+  
+  useEffect(() => {
+    const temaSalvo = localStorage.getItem("tema-jogos");
 
+    if (temaSalvo === "escuro") {
+      setTemaEscuro(true);
+    }
+  }, []);
+  
   const auth = useContext(AuthContext);
   if (auth?.carregando) {
     return <p>Carregando...</p>;
@@ -34,13 +42,6 @@ export default function Login() {
   }
 
   // Recupera o tema salvo
-  useEffect(() => {
-    const temaSalvo = localStorage.getItem("tema-jogos");
-
-    if (temaSalvo === "escuro") {
-      setTemaEscuro(true);
-    }
-  }, []);
 
   // Troca o tema
   function mudarTema() {
