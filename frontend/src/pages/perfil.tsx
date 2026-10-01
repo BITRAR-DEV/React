@@ -4,27 +4,29 @@ import { useParams } from "react-router-dom";
 import { Moon, Sun, Star, Pencil, Upload } from "lucide-react";
 import FotoPadrao from "../assets/FotoPadrao.jfif";
 import Overlay from "../components/overlay";
+import { useTema } from "../contexts/ThemeContext";
+import Jogos from "./jogos";
 
 const api = import.meta.env.VITE_API_URL;
+const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
 
 export default function Perfil() {
   const { nick } = useParams();
 
   const auth = useContext(AuthContext);
-
-  const [temaEscuro, setTemaEscuro] = useState(false);
+  const tema = useTema();
   const [edicaoPerm, setEdicaoPerm] = useState(false);
   const [editandoInfo, setEditandoInfo] = useState(false);
   const [informacoes, setInformacoes] = useState("");
   const [textoInformacoes, setTextoInformacoes] = useState("");
-  
+
   useEffect(() => {
     if (nick === auth?.usuario?.nick) {
       setEdicaoPerm(true);
-      console.log("Edição liberada")
+      console.log("Edição liberada");
     }
-    console.log(edicaoPerm)
-  })
+    console.log(edicaoPerm);
+  });
 
   type Usuario = {
     id: number;
@@ -34,6 +36,14 @@ export default function Perfil() {
     banner: string;
   };
 
+  type Jogo = {
+    id: number;
+    name: string;
+    background_image: string;
+    rating: number;
+  };
+
+  const [jogos, setJogos] = useState<Jogo[]>([]);
   const [dados, setDados] = useState<Usuario | null>(null);
 
   async function buscarPerfil() {
@@ -51,29 +61,23 @@ export default function Perfil() {
   async function buscarJogos() {
     try {
       const resposta = await fetch(`${api}/jogos/${nick}`);
-      
+
       const resultado = await resposta.json();
-      
-      console.log(resultado)
+
+      const requisicoes = resultado.map((jogo: { rawgId: number }) =>
+        fetch(
+          `https://api.rawg.io/api/games/${jogo.rawgId}?key=${rawgKey}`,
+        ).then((resposta) => resposta.json()),
+      );
+
+      const jogosCompletos = await Promise.all(requisicoes);
+
+      setJogos(jogosCompletos);
+
+      console.log(jogos)
     } catch (error) {
       console.log(error);
     }
-  }
-
-  useEffect(() => {
-    const temaSalvo = localStorage.getItem("tema-jogos");
-
-    if (temaSalvo === "escuro") {
-      setTemaEscuro(true);
-    }
-  }, []);
-
-  function mudarTema() {
-    const novoTema = !temaEscuro;
-
-    setTemaEscuro(novoTema);
-
-    localStorage.setItem("tema-jogos", novoTema ? "escuro" : "claro");
   }
 
   useEffect(() => {
@@ -133,7 +137,11 @@ export default function Perfil() {
       if (!atualizou.ok) {
         throw new Error(atualizou.erro);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    } finally {
+      buscarPerfil();
+    }
   }
 
   function validarBanner(arquivo: File) {
@@ -164,7 +172,7 @@ export default function Perfil() {
       return;
     }
 
-    validarBanner(arquivo)
+    validarBanner(arquivo);
 
     formData.append("file", arquivo);
     formData.append(
@@ -200,43 +208,25 @@ export default function Perfil() {
       if (!atualizou.ok) {
         throw new Error(atualizou.erro);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    } finally {
+      buscarPerfil();
+    }
   }
 
   return (
     <div
       className={`flex flex-col items-center justify-center px-6 py-8 transition-colors duration-300 ${
-        temaEscuro ? "bg-[#17131f] text-white" : "bg-blue-100 text-violet-950"
+        tema?.temaEscuro
+          ? "bg-[#17131f] text-white"
+          : "bg-blue-100 text-violet-950"
       }`}
     >
-      {/* BOTÃO DO TEMA */}
-      <div className="self-end">
-        <button
-          onClick={mudarTema}
-          className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold transition ${
-            temaEscuro
-              ? "bg-yellow-400 text-black hover:bg-yellow-300"
-              : "bg-violet-950 text-white hover:bg-[#240658]"
-          }`}
-        >
-          {temaEscuro ? (
-            <>
-              <Sun size={20} />
-              Tema claro
-            </>
-          ) : (
-            <>
-              <Moon size={20} />
-              Tema escuro
-            </>
-          )}
-        </button>
-      </div>
-
       {/* PERFIL */}
       <div
         className={`mt-8 flex w-[70vw] flex-col items-center justify-center overflow-hidden rounded-2xl shadow-[0px_0px_10px] shadow-gray-600 ${
-          temaEscuro ? "bg-violet-950" : "bg-slate-50"
+          tema?.temaEscuro ? "bg-violet-950" : "bg-slate-50"
         }`}
       >
         {/* BANNER */}
@@ -253,14 +243,15 @@ export default function Perfil() {
             {edicaoPerm && <Overlay size={40} />}
           </label>
 
-          {edicaoPerm && <input
-            id="bannerPerfil"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={mudarBanner}
-          />}
-          
+          {edicaoPerm && (
+            <input
+              id="bannerPerfil"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={mudarBanner}
+            />
+          )}
         </div>
 
         {/* INFORMAÇÕES DO USUÁRIO */}
@@ -274,19 +265,21 @@ export default function Perfil() {
                 src={dados?.fotoPerfil || FotoPadrao}
                 alt="Foto de perfil"
                 className={`h-37.5 w-37.5 rounded-full border-8 object-cover shadow-[0_0_10px] shadow-gray-600 ${
-                  temaEscuro ? "border-violet-950" : "border-slate-50"
+                  tema?.temaEscuro ? "border-violet-950" : "border-slate-50"
                 }`}
               />
-              {edicaoPerm &&<Overlay rounded="rounded-full" size={20} />}
+              {edicaoPerm && <Overlay rounded="rounded-full" size={20} />}
             </label>
 
-            {edicaoPerm && <input
-              id="fotoPerfil"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={mudarFoto}
-            />}
+            {edicaoPerm && (
+              <input
+                id="fotoPerfil"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={mudarFoto}
+              />
+            )}
           </div>
 
           <div className="mt-4 ml-4 flex flex-col">
@@ -336,7 +329,7 @@ export default function Perfil() {
                   maxLength={300}
                   rows={4}
                   className={`w-full resize-none rounded-lg border p-3 transition outline-none ${
-                    temaEscuro
+                    tema?.temaEscuro
                       ? "border-violet-700 bg-[#211b2b] text-white placeholder:text-gray-400 focus:border-violet-400"
                       : "border-violet-200 bg-white text-violet-950 placeholder:text-gray-400 focus:border-violet-500"
                   }`}
@@ -353,7 +346,7 @@ export default function Perfil() {
                   <button
                     onClick={cancelarEdicao}
                     className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
-                      temaEscuro
+                      tema?.temaEscuro
                         ? "bg-gray-700 text-white hover:bg-gray-600"
                         : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                     }`}
@@ -364,7 +357,7 @@ export default function Perfil() {
 
                 <p
                   className={`mt-1 text-right text-xs ${
-                    temaEscuro ? "text-gray-400" : "text-gray-500"
+                    tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
                   {informacoes.length}/300
@@ -378,7 +371,7 @@ export default function Perfil() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <div
             className={`overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
-              temaEscuro
+              tema?.temaEscuro
                 ? "border-violet-900 bg-[#211b2b]"
                 : "border-violet-100 bg-white"
             }`}
@@ -397,7 +390,7 @@ export default function Perfil() {
               <div className="mt-4 flex items-center justify-between">
                 <span
                   className={`text-sm ${
-                    temaEscuro ? "text-gray-400" : "text-gray-500"
+                    tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
                   }`}
                 ></span>
 

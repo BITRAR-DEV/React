@@ -2,11 +2,14 @@ import { NavLink, Navigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Eye, EyeOff, Moon, Sun } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
+import { useTema } from "../contexts/ThemeContext";
 
 const api = import.meta.env.VITE_API_URL;
 
 export default function Cadastro() {
   const auth = useContext(AuthContext);
+  const tema = useTema();
+
   if (auth?.carregando) {
     return <p>Carregando...</p>;
   }
@@ -15,8 +18,6 @@ export default function Cadastro() {
     return <Navigate to="/perfil" replace />; 
   }
   const [mostrar, setMostrar] = useState(false);
-
-  const [temaEscuro, setTemaEscuro] = useState(false);
 
   const [form, setForm] = useState({
     id: 0,
@@ -37,27 +38,6 @@ export default function Cadastro() {
   const emailErroEstilo = emailerro
     ? "bg-red-100"
     : "";
-
-  // Recupera o tema salvo
-  useEffect(() => {
-    const temaSalvo = localStorage.getItem("tema-jogos");
-
-    if (temaSalvo === "escuro") {
-      setTemaEscuro(true);
-    }
-  }, []);
-
-  // Troca o tema
-  function mudarTema() {
-    const novoTema = !temaEscuro;
-
-    setTemaEscuro(novoTema);
-
-    localStorage.setItem(
-      "tema-jogos",
-      novoTema ? "escuro" : "claro"
-    );
-  }
 
   async function cadastrar(
     e: React.SubmitEvent<HTMLFormElement>
@@ -113,40 +93,16 @@ export default function Cadastro() {
   return (
     <div
       className={`min-h-screen px-6 py-8 transition-colors duration-300 ${
-        temaEscuro
+        tema?.temaEscuro
           ? "bg-[#17131f] text-white"
           : "bg-blue-100 text-violet-950"
       }`}
     >
-      {/* BOTÃO DE TEMA */}
-      <div className="mb-6 flex justify-end">
-        <button
-          onClick={mudarTema}
-          className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold transition ${
-            temaEscuro
-              ? "bg-yellow-400 text-black hover:bg-yellow-300"
-              : "bg-violet-700 text-white hover:bg-violet-800"
-          }`}
-        >
-          {temaEscuro ? (
-            <>
-              <Sun size={20} />
-              Tema claro
-            </>
-          ) : (
-            <>
-              <Moon size={20} />
-              Tema escuro
-            </>
-          )}
-        </button>
-      </div>
-
       {/* CADASTRO */}
       <div className="flex items-center justify-center">
         <div
           className={`h-full rounded-[15px] border p-6 shadow-[0_1px_5px] transition-colors md:w-120 ${
-            temaEscuro
+            tema?.temaEscuro
               ? "border-violet-800 bg-[#211b2b] shadow-black"
               : "border-zinc-950 bg-blue-50 shadow-zinc-950"
           }`}
@@ -154,7 +110,7 @@ export default function Cadastro() {
           <div className="mb-6 flex flex-col items-center justify-center">
             <h2
               className={`mb-1 text-3xl font-bold ${
-                temaEscuro
+                tema?.temaEscuro
                   ? "text-violet-300"
                   : "text-violet-950"
               }`}
@@ -185,9 +141,9 @@ export default function Cadastro() {
                   })
                 }
                 className={`rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                    : "border-violet-950 bg-white"
+                    : "border-violet-950 bg-white text-violet-950"
                 }`}
                 placeholder="Digite seu Nome Completo:"
               />
@@ -204,9 +160,9 @@ export default function Cadastro() {
                   })
                 }
                 className={`rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                    : "border-violet-950 bg-white"
+                    : "border-violet-950 bg-white text-violet-950"
                 }`}
                 placeholder="Digite seu Nick de Usuário:"
               />
@@ -223,9 +179,9 @@ export default function Cadastro() {
                   })
                 }
                 className={`rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${emailErroEstilo} ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                    : "border-violet-950 bg-white"
+                    : "border-violet-950 bg-white text-violet-950"
                 }`}
                 placeholder="Digite seu Email:"
               />
@@ -244,9 +200,9 @@ export default function Cadastro() {
                     })
                   }
                   className={`w-full rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${senhaErroEstilo} ${
-                    temaEscuro
+                    tema?.temaEscuro
                       ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                      : "border-violet-950 bg-white"
+                      : "border-violet-950 bg-white text-violet-950"
                   }`}
                   placeholder="Digite sua Senha:"
                 />
@@ -259,7 +215,7 @@ export default function Cadastro() {
                   {mostrar ? (
                     <Eye
                       color={
-                        temaEscuro
+                        tema?.temaEscuro
                           ? "#c4b5fd"
                           : "#2f0d68"
                       }
@@ -267,7 +223,7 @@ export default function Cadastro() {
                   ) : (
                     <EyeOff
                       color={
-                        temaEscuro
+                        tema?.temaEscuro
                           ? "#c4b5fd"
                           : "#2f0d68"
                       }
@@ -289,9 +245,9 @@ export default function Cadastro() {
                     })
                   }
                   className={`w-full rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${senhaErroEstilo} ${
-                    temaEscuro
+                    tema?.temaEscuro
                       ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                      : "border-violet-950 bg-white"
+                      : "border-violet-950 bg-white text-violet-950"
                   }`}
                   placeholder="Confirme sua Senha:"
                 />
@@ -321,7 +277,7 @@ export default function Cadastro() {
             {/* DIVISOR */}
             <div
               className={`flex select-none items-center ${
-                temaEscuro
+                tema?.temaEscuro
                   ? "text-gray-400"
                   : "text-gray-500"
               }`}

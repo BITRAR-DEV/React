@@ -6,6 +6,7 @@ import Login from "../pages/login";
 import Cadastro from "../pages/cadastro";
 import Perfil from "../pages/perfil";
 import MeuPerfil from "../pages/meuperfil";
+import EditarCadastro from "../pages/editarCadastro";
 
 export default function Outlet() {
     return (
@@ -17,6 +18,8 @@ export default function Outlet() {
             <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/perfil/:nick" element={<Perfil />} />
             <Route path="/perfil" element={<MeuPerfil />} />
+            <Route  path="/editar-cadastro" element={<EditarCadastro />}
+/>
         </Routes>
     );
 }

@@ -8,6 +8,7 @@ import {
   Sun,
   X,
 } from "lucide-react";
+import { useTema } from "../contexts/ThemeContext";
 
 const API_KEY = import.meta.env.VITE_RAWG_API_KEY;
 
@@ -71,6 +72,7 @@ export default function Jogos() {
     useState<Jogo | null>(null);
 
   const modal = useRef<HTMLDialogElement>(null);
+  const tema = useTema()
 
   async function buscarJogos() {
     setCarregando(true);
@@ -169,17 +171,10 @@ export default function Jogos() {
     buscarJogos();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(
-      "tema-jogos",
-      temaEscuro ? "escuro" : "claro"
-    );
-  }, [temaEscuro]);
-
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        temaEscuro
+        tema?.temaEscuro
           ? "bg-[#17131f] text-white"
           : "bg-blue-100 text-violet-950"
       }`}
@@ -187,7 +182,7 @@ export default function Jogos() {
       {/* CABEÇALHO */}
       <section
         className={`border-b px-5 py-8 transition-colors md:px-10 ${
-          temaEscuro
+          tema?.temaEscuro
             ? "border-violet-900 bg-[#211b2b]"
             : "border-violet-200 bg-blue-150"
         }`}
@@ -201,7 +196,7 @@ export default function Jogos() {
 
               <p
                 className={`mt-2 ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "text-gray-300"
                     : "text-violet-700"
                 }`}
@@ -209,28 +204,6 @@ export default function Jogos() {
                 Explore jogos disponíveis na RAWG
               </p>
             </div>
-
-            {/* TEMA */}
-            <button
-              onClick={() => setTemaEscuro(!temaEscuro)}
-              className={`flex w-fit items-center gap-2 rounded-xl px-4 py-2 font-semibold transition ${
-                temaEscuro
-                  ? "bg-yellow-400 text-black hover:bg-yellow-300"
-                  : "bg-violet-700 text-white hover:bg-violet-800"
-              }`}
-            >
-              {temaEscuro ? (
-                <>
-                  <Sun size={20} />
-                  Tema claro
-                </>
-              ) : (
-                <>
-                  <Moon size={20} />
-                  Tema escuro
-                </>
-              )}
-            </button>
           </div>
 
           {/* BUSCA */}
@@ -245,7 +218,7 @@ export default function Jogos() {
               <Search
                 size={22}
                 className={`absolute left-4 top-1/2 -translate-y-1/2 ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "text-gray-400"
                     : "text-violet-500"
                 }`}
@@ -257,7 +230,7 @@ export default function Jogos() {
                 onChange={(e) => setBusca(e.target.value)}
                 placeholder="Buscar jogos..."
                 className={`w-full rounded-xl border py-3 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-violet-500 ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-800 bg-[#15111c] text-white placeholder:text-gray-500"
                     : "border-violet-200 bg-white text-gray-900"
                 }`}
@@ -293,7 +266,7 @@ export default function Jogos() {
               setOrdenacao(e.target.value as Ordenacao);
             }}
             className={`rounded-lg border px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500 ${
-              temaEscuro
+              tema?.temaEscuro
                 ? "border-violet-800 bg-[#211b2b] text-white"
                 : "border-violet-200 bg-white"
             }`}
@@ -328,7 +301,7 @@ export default function Jogos() {
 
           <div
             className={`flex overflow-hidden rounded-lg border ${
-              temaEscuro
+              tema?.temaEscuro
                 ? "border-violet-800"
                 : "border-violet-200"
             }`}
@@ -339,7 +312,7 @@ export default function Jogos() {
               className={`p-2 ${
                 modoExibicao === "grid"
                   ? "bg-violet-700 text-white"
-                  : temaEscuro
+                  : tema?.temaEscuro
                     ? "bg-[#211b2b] text-gray-300"
                     : "bg-white text-violet-700"
               }`}
@@ -353,7 +326,7 @@ export default function Jogos() {
               className={`p-2 ${
                 modoExibicao === "list"
                   ? "bg-violet-700 text-white"
-                  : temaEscuro
+                  : tema?.temaEscuro
                     ? "bg-[#211b2b] text-gray-300"
                     : "bg-white text-violet-700"
               }`}
@@ -399,7 +372,7 @@ export default function Jogos() {
               <div
                 key={jogo.id}
                 className={`overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-900 bg-[#211b2b]"
                     : "border-violet-100 bg-white"
                 }`}
@@ -430,7 +403,7 @@ export default function Jogos() {
                   <div className="mt-4 flex items-center justify-between">
                     <span
                       className={`text-sm ${
-                        temaEscuro
+                        tema?.temaEscuro
                           ? "text-gray-400"
                           : "text-gray-500"
                       }`}
@@ -458,7 +431,7 @@ export default function Jogos() {
               <div
                 key={jogo.id}
                 className={`flex flex-col overflow-hidden rounded-2xl border shadow-md transition md:flex-row ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-900 bg-[#211b2b]"
                     : "border-violet-100 bg-white"
                 }`}
@@ -491,7 +464,7 @@ export default function Jogos() {
                   <div className="mt-5 flex items-center justify-between gap-3">
                     <span
                       className={`text-sm ${
-                        temaEscuro
+                        tema?.temaEscuro
                           ? "text-gray-400"
                           : "text-gray-500"
                       }`}
@@ -518,7 +491,7 @@ export default function Jogos() {
       <dialog
         ref={modal}
         className={`m-auto w-[90%] max-w-4xl rounded-2xl border-2 border-violet-800 p-0 shadow-2xl backdrop:bg-black/70 ${
-          temaEscuro
+          tema?.temaEscuro
             ? "bg-[#211b2b] text-white"
             : "bg-white text-violet-950"
         }`}
@@ -561,7 +534,7 @@ export default function Jogos() {
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div
                   className={`rounded-xl p-4 ${
-                    temaEscuro
+                    tema?.temaEscuro
                       ? "bg-[#17131f]"
                       : "bg-violet-50"
                   }`}
@@ -577,7 +550,7 @@ export default function Jogos() {
 
                 <div
                   className={`rounded-xl p-4 ${
-                    temaEscuro
+                    tema?.temaEscuro
                       ? "bg-[#17131f]"
                       : "bg-violet-50"
                   }`}

@@ -7,11 +7,13 @@ import {
   Sun,
 } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
+import { useTema } from "../contexts/ThemeContext";
 
-const api = import.meta.env.VITE_API_URL;
+const api = import.meta.env.VITE_API_URL ;
 
 export default function Login() {
   const navigate = useNavigate();
+  const tema = useTema();
 
   const [mostrar, setMostrar] = useState(false);
 
@@ -39,20 +41,6 @@ export default function Login() {
   
    if (auth?.usuario) {
     return <Navigate to="/perfil" replace />;
-  }
-
-  // Recupera o tema salvo
-
-  // Troca o tema
-  function mudarTema() {
-    const novoTema = !temaEscuro;
-
-    setTemaEscuro(novoTema);
-
-    localStorage.setItem(
-      "tema-jogos",
-      novoTema ? "escuro" : "claro"
-    );
   }
 
   async function logar(e: React.SubmitEvent<HTMLFormElement>) {
@@ -99,40 +87,18 @@ export default function Login() {
   return (
     <div
       className={`px-6 p-[30px_0px_60px] transition-colors duration-300 ${
-        temaEscuro
+        tema?.temaEscuro
           ? "bg-[#17131f] text-white"
           : "bg-blue-100 text-violet-950"
       }`}
     >
-      {/* BOTÃO DE TEMA */}
-      <div className="mb-6 flex justify-end">
-        <button
-          onClick={mudarTema}
-          className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold transition ${
-            temaEscuro
-              ? "bg-yellow-400 text-black hover:bg-yellow-300"
-              : "bg-violet-700 text-white hover:bg-violet-800"
-          }`}
-        >
-          {temaEscuro ? (
-            <>
-              <Sun size={20} />
-              Tema claro
-            </>
-          ) : (
-            <>
-              <Moon size={20} />
-              Tema escuro
-            </>
-          )}
-        </button>
-      </div>
+ 
 
       {/* LOGIN */}
       <div className="flex items-center justify-center">
         <div
           className={`h-full rounded-[15px] border p-6 shadow-[0_1px_5px] transition-colors md:w-120 ${
-            temaEscuro
+            tema?.temaEscuro
               ? "border-violet-800 bg-[#211b2b] shadow-black"
               : "border-zinc-950 bg-blue-50 shadow-zinc-950"
           }`}
@@ -140,7 +106,7 @@ export default function Login() {
           <div className="mb-6 flex flex-col items-center justify-center">
             <h2
               className={`mb-1 text-3xl font-bold ${
-                temaEscuro
+                tema?.temaEscuro
                   ? "text-violet-300"
                   : "text-violet-950"
               }`}
@@ -164,9 +130,9 @@ export default function Login() {
               <input
                 type="text"
                 className={`rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${
-                  temaEscuro
+                  tema?.temaEscuro
                     ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                    : "border-violet-950 bg-white"
+                    : "border-violet-950 bg-white text-violet-950"
                 }`}
                 placeholder="Digite seu Email ou Nick:"
                 value={form.loginID}
@@ -184,9 +150,9 @@ export default function Login() {
                   <input
                     type={mostrar ? "text" : "password"}
                     className={`w-full rounded-lg border-2 p-2 outline-none focus:ring-2 focus:ring-violet-500 ${
-                      temaEscuro
+                      tema?.temaEscuro
                         ? "border-violet-700 bg-[#17131f] text-white placeholder:text-gray-400"
-                        : "border-violet-950 bg-white"
+                        : "border-violet-950 bg-white text-violet-950"
                     }`}
                     placeholder="Digite sua Senha:"
                     value={form.senha}
@@ -206,13 +172,13 @@ export default function Login() {
                     {mostrar ? (
                       <Eye
                         color={
-                          temaEscuro ? "#c4b5fd" : "#2f0d68"
+                          tema?.temaEscuro ? "#c4b5fd" : "#2f0d68"
                         }
                       />
                     ) : (
                       <EyeOff
                         color={
-                          temaEscuro ? "#c4b5fd" : "#2f0d68"
+                          tema?.temaEscuro ? "#c4b5fd" : "#2f0d68"
                         }
                       />
                     )}
@@ -238,7 +204,7 @@ export default function Login() {
             {/* DIVISOR */}
             <div
               className={`flex select-none items-center ${
-                temaEscuro
+                tema?.temaEscuro
                   ? "text-gray-400"
                   : "text-gray-500"
               }`}
