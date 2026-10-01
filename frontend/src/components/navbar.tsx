@@ -8,8 +8,8 @@ export default function Navbar() {
 
   const estiloLink = ({ isActive }: { isActive: boolean }) =>
     isActive
-      ? "underline p-[8px_6px] bg-violet-950 rounded-xl"
-      : "p-[8px_6px] hover:bg-violet-950 rounded-xl";
+      ? "underline p-[8px_6px] bg-[#3f1780] rounded-xl"
+      : "p-[8px_6px] hover:bg-[#3f1780] rounded-xl";
 
   const [aberto, setAberto] = useState(false);
 
@@ -80,17 +80,17 @@ export default function Navbar() {
             </NavLink>
 
             {/* Menu suspenso */}
-            <div className="absolute top-full right-0 z-50 hidden pt-2 group-hover:block">
-              <div className="w-52 rounded-xl bg-violet-900 p-2 shadow-xl">
+            <div className="absolute top-full -right-4 hidden pt-2 group-hover:block">
+              <div className="w-52 rounded-xl bg-violet-950 p-2 shadow-xl">
                 <Link
                   to="/editar-cadastro"
-                  className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-white hover:bg-violet-950"
+                  className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-white hover:bg-[#3f1780]"
                 >
                   Editar cadastro<Pencil size={24}/>
                 </Link>
                 <Link
                   to={`/perfil/${auth.usuario.nick}/jogos`}
-                  className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-white transition hover:bg-violet-950"
+                  className="flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-white transition hover:bg-[#3f1780]"
                 >
                   Meus jogos <Gamepad2 />
                 </Link>

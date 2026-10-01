@@ -51,9 +51,7 @@ function formatarData(data: string) {
   return dataFormatada.toLocaleDateString("pt-BR");
 }
 
-function limparHTML(texto: string) {
-  return texto.replace(/<[^>]*>/g, "");
-}
+const api = import.meta.env.VITE_API_URL;
 
 export default function Jogos() {
   const [jogos, setJogos] = useState<Jogo[]>([]);
@@ -143,6 +141,17 @@ export default function Jogos() {
     } catch (error) {
       console.error("Erro ao buscar detalhes:", error);
     }
+  }
+
+  async function adicionarJogo(jogoId: number) {
+    const resposta = await fetch(`${api}/jogos/${jogoId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(resposta)
   }
 
   function fecharModal() {
@@ -604,7 +613,7 @@ export default function Jogos() {
                 )}
               <div className="flex gap-1">
                 {/*ADICIONAR LISTA*/}
-                <button className="mt-6 inline-block rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800">
+                <button className="mt-6 inline-block rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800" onClick={() => jogoSelecionado && adicionarJogo(jogoSelecionado.id)}>
                   Adicionar em Minha Lista
                 </button>
                 {/* SITE */}

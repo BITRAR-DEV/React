@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 import { Moon, Sun, Star, Pencil, Upload } from "lucide-react";
-import FotoPadrao from "../assets/FotoPadrao.jfif"
+import FotoPadrao from "../assets/FotoPadrao.jfif";
+import Overlay from "../components/overlay";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -12,16 +13,25 @@ export default function Perfil() {
   const auth = useContext(AuthContext);
 
   const [temaEscuro, setTemaEscuro] = useState(false);
-
+  const [edicaoPerm, setEdicaoPerm] = useState(false);
   const [editandoInfo, setEditandoInfo] = useState(false);
   const [informacoes, setInformacoes] = useState("");
   const [textoInformacoes, setTextoInformacoes] = useState("");
+  
+  useEffect(() => {
+    if (nick === auth?.usuario?.nick) {
+      setEdicaoPerm(true);
+      console.log("Edição liberada")
+    }
+    console.log(edicaoPerm)
+  })
 
   type Usuario = {
     id: number;
     nome: string;
     nick: string;
     fotoPerfil: string;
+    banner: string;
   };
 
   const [dados, setDados] = useState<Usuario | null>(null);
@@ -33,6 +43,18 @@ export default function Perfil() {
       const resultado = await resposta.json();
 
       setDados(resultado);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function buscarJogos() {
+    try {
+      const resposta = await fetch(`${api}/jogos/${nick}`);
+      
+      const resultado = await resposta.json();
+      
+      console.log(resultado)
     } catch (error) {
       console.log(error);
     }
@@ -56,6 +78,7 @@ export default function Perfil() {
 
   useEffect(() => {
     buscarPerfil();
+    buscarJogos();
   }, [nick]);
 
   function salvarInformacoes() {
@@ -73,7 +96,7 @@ export default function Perfil() {
     const formData = new FormData();
 
     if (!arquivo) {
-      return
+      return;
     }
 
     formData.append("file", arquivo);
@@ -91,10 +114,10 @@ export default function Perfil() {
           body: formData,
         },
       );
-  
+
       const dados = await resposta.json();
 
-      const atualizar = await fetch(`${api}/foto`, {
+      const atualizar = await fetch(`${api}/perfil`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -110,12 +133,74 @@ export default function Perfil() {
       if (!atualizou.ok) {
         throw new Error(atualizou.erro);
       }
-      
-    } catch (error) {
-      
+    } catch (error) {}
+  }
+
+  function validarBanner(arquivo: File) {
+    const img = new Image();
+
+    img.onload = () => {
+      const proporcao = img.width / img.height;
+
+      console.log(img.width, img.height);
+      console.log(proporcao);
+
+      if (Math.abs(proporcao - 16 / 9) > 0.01) {
+        alert("O banner precisa estar na proporção 16:9.");
+        return;
+      }
+
+      console.log("Banner válido!");
+    };
+
+    img.src = URL.createObjectURL(arquivo);
+  }
+
+  async function mudarBanner(e: React.ChangeEvent<HTMLInputElement>) {
+    const arquivo = e.target.files?.[0];
+    const formData = new FormData();
+
+    if (!arquivo) {
+      return;
     }
-    
-    
+
+    validarBanner(arquivo)
+
+    formData.append("file", arquivo);
+    formData.append(
+      "upload_preset",
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    );
+
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    try {
+      const resposta = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      const dados = await resposta.json();
+
+      const atualizar = await fetch(`${api}/perfil`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          banner: dados.secure_url,
+        }),
+      });
+
+      const atualizou = await atualizar.json();
+
+      if (!atualizou.ok) {
+        throw new Error(atualizou.erro);
+      }
+    } catch (error) {}
   }
 
   return (
@@ -156,33 +241,52 @@ export default function Perfil() {
       >
         {/* BANNER */}
         <div className="w-full shadow-[0_0_10px] shadow-gray-400">
-          <img
-            src="https://i.makeagif.com/media/11-11-2020/FGuzMK.gif"
-            alt="Banner"
-            className="h-50 w-full object-cover"
-          />
+          <label
+            htmlFor="bannerPerfil"
+            className={`group relative block ${edicaoPerm && "cursor-pointer"}`}
+          >
+            <img
+              src={dados?.banner}
+              alt="Banner"
+              className="h-50 w-full object-cover"
+            />
+            {edicaoPerm && <Overlay size={40} />}
+          </label>
+
+          {edicaoPerm && <input
+            id="bannerPerfil"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={mudarBanner}
+          />}
+          
         </div>
 
         {/* INFORMAÇÕES DO USUÁRIO */}
         <div className="mb-4 flex w-full px-12">
           <div className="-mt-19 justify-self-start">
-            <label htmlFor="fotoPerfil" className="cursor-pointer">
+            <label
+              htmlFor="fotoPerfil"
+              className={`group relative block ${edicaoPerm && "cursor-pointer"}`}
+            >
               <img
                 src={dados?.fotoPerfil || FotoPadrao}
                 alt="Foto de perfil"
-                className={`h-37.5 w-37.5 rounded-full border-8 object-cover ${
+                className={`h-37.5 w-37.5 rounded-full border-8 object-cover shadow-[0_0_10px] shadow-gray-600 ${
                   temaEscuro ? "border-violet-950" : "border-slate-50"
                 }`}
               />
+              {edicaoPerm &&<Overlay rounded="rounded-full" size={20} />}
             </label>
 
-            <input
+            {edicaoPerm && <input
               id="fotoPerfil"
               type="file"
               accept="image/*"
               className="hidden"
               onChange={mudarFoto}
-            />
+            />}
           </div>
 
           <div className="mt-4 ml-4 flex flex-col">

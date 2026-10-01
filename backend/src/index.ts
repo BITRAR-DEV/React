@@ -60,13 +60,26 @@ app.get("/me", async (req, res) => {
         nome: true,
         email: true,
         nick: true,
-        fotoPerfil: true,
       }
     });
 
     return res.json(dados);
   } catch (error) {
     res.status(500).json({ error: "Erro interno no Servidor" });
+  }
+});
+
+app.get("/jogos", async (req, res) => {
+  try {
+    const jogos = await prisma.jogoUsuario.findMany();
+
+    return res.json(jogos);
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      erro: "Erro ao buscar jogos",
+    });
   }
 });
 
@@ -81,8 +94,68 @@ app.get("/usuarios/:nick", async (req, res) => {
   return res.json(usuario)
 });
 
-app.patch("/foto", async (req, res) =>{
-  const { fotoPerfil } = req.body;
+app.get("/jogos/:nick", async (req, res) => {
+  const { nick } = req.params;
+
+  const usuario = await prisma.usuario.findUnique({
+    where: {
+      nick: nick,
+    }
+  })
+
+  if (!usuario) {
+    return res.status(401).json({erro: "Não logado!"})
+  }
+
+  const jogos = await prisma.jogoUsuario.findMany({
+    where: {
+      usuarioId: usuario?.id
+    }
+  })
+
+  return res.json(jogos)
+});
+
+app.post("/jogos/:rawgId", async (req, res) =>{
+  const userId = req.session.usuarioId;
+  const rawgId = Number(req.params.rawgId);
+  
+  if (!userId) {
+    return res.status(401).json({erro: "Não logado!"})
+  }
+
+  const jogoExistente = await prisma.jogoUsuario.findUnique({
+    where: {
+      usuarioId_rawgId: {
+        usuarioId: userId,
+        rawgId: rawgId,
+      },
+    },
+  });
+
+  if (jogoExistente) {
+    return res.status(409).json({
+      erro: "Esse jogo já está na sua lista"
+    });
+  }
+  
+  try {
+  
+    const jogos = await prisma.jogoUsuario.create({
+      data: {
+        rawgId,
+        usuarioId: userId 
+      }
+    })
+  
+    return res.json(jogos);
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno no Servidor" });
+  }
+});
+
+app.patch("/perfil", async (req, res) =>{
+  const { fotoPerfil, banner } = req.body;
 
   const userId = req.session.usuarioId;
   
@@ -90,14 +163,21 @@ app.patch("/foto", async (req, res) =>{
     return res.status(401).json({erro: "Não logado"})
   }
 
-  const usuario = await prisma.usuario.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      fotoPerfil: fotoPerfil,
-    }
-  })
+  try {
+    const usuario = await prisma.usuario.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...(fotoPerfil !== undefined && { fotoPerfil }),
+        ...(banner !== undefined && { banner }),
+      }
+    })
+
+    return res.json(usuario)
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno no Servidor" });
+  }
 });
 
 app.post("/login", async (req, res) => {
