@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useParams } from "react-router-dom";
-import { Moon, Sun, Star, Pencil, Upload } from "lucide-react";
+import { useParams, NavLink } from "react-router-dom";
+import { Star, Pencil, ArrowRight } from "lucide-react";
 import FotoPadrao from "../assets/FotoPadrao.jfif";
 import Overlay from "../components/overlay";
 import { useTema } from "../contexts/ThemeContext";
-import Jogos from "./jogos";
 
 const api = import.meta.env.VITE_API_URL;
 const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
@@ -45,6 +44,7 @@ export default function Perfil() {
 
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [dados, setDados] = useState<Usuario | null>(null);
+  const [carregando, setCarregando] = useState(false);
 
   async function buscarPerfil() {
     try {
@@ -59,6 +59,7 @@ export default function Perfil() {
   }
 
   async function buscarJogos() {
+    setCarregando(true);
     try {
       const resposta = await fetch(`${api}/jogos/${nick}`);
 
@@ -73,10 +74,10 @@ export default function Perfil() {
       const jogosCompletos = await Promise.all(requisicoes);
 
       setJogos(jogosCompletos);
-
-      console.log(jogos)
     } catch (error) {
       console.log(error);
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -84,6 +85,10 @@ export default function Perfil() {
     buscarPerfil();
     buscarJogos();
   }, [nick]);
+
+  useEffect(() => {
+    console.log("Jogos mudou:", jogos);
+  }, [jogos]);
 
   function salvarInformacoes() {
     setTextoInformacoes(informacoes);
@@ -368,37 +373,64 @@ export default function Perfil() {
         </div>
 
         {/* JOGOS */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <div
-            className={`overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
-              tema?.temaEscuro
-                ? "border-violet-900 bg-[#211b2b]"
-                : "border-violet-100 bg-white"
-            }`}
-          >
-            <div className="relative">
-              <img src="#" alt="#" className="h-56 w-full object-cover" />
+        <div
+          className={`w-full border-t ${
+            tema?.temaEscuro
+              ? "border-violet-900"
+              : "border-violet-100"
+          }`}
+        >
+          <h1 className="px-12 pt-6 pb-4 text-2xl font-semibold ">Jogos Adicionados à Lista</h1>
 
-              <div className="absolute top-3 right-3 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-white">
-                <Star size={17} fill="#F1C338" color="#F1C338" />
-              </div>
+          {carregando && (
+            <div className="flex justify-center py-20">
+              <p className="text-xl font-semibold">Carregando jogos...</p>
             </div>
+          )}
 
-            <div className="p-5">
-              <h2 className="truncate text-xl font-bold"></h2>
+          <div className="grid grid-cols-4 gap-3 px-12 pb-4">
+            {jogos.slice(0, 4).map((jogo) => (
+              <div
+                className={`overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                  tema?.temaEscuro
+                    ? "border-violet-900 bg-[#211b2b]"
+                    : "border-violet-100 bg-white"
+                }`}
+              >
+                <div className="relative" key={jogo.id}>
+                  <img
+                    src={jogo.background_image}
+                    alt="#"
+                    className="h-56 w-full object-cover"
+                  />
 
-              <div className="mt-4 flex items-center justify-between">
-                <span
-                  className={`text-sm ${
-                    tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
-                  }`}
-                ></span>
+                  <div className="absolute top-3 right-3 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-white">
+                    {jogo.rating}{" "}
+                    <Star size={17} fill="#F1C338" color="#F1C338" />
+                  </div>
+                </div>
 
-                <button className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white transition hover:bg-violet-800">
-                  Saiba mais
-                </button>
+                <div className="p-5">
+                  <h2 className="truncate text-xl font-bold">{jogo.name}</h2>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <span
+                      className={`text-sm ${
+                        tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    ></span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
+          </div>
+          <div className="flex w-full justify-end px-12 pb-6">
+            <NavLink to={`/perfil/${nick}/jogos`}>
+              <div className="flex gap-2 font-semibold hover:underline">
+                <p className="text-right">Ver Todos</p>
+                <ArrowRight />
+              </div>
+            </NavLink>
           </div>
         </div>
       </div>

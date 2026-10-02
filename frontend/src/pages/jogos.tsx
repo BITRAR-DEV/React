@@ -2,10 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import {
   Grid3X3,
   List,
-  Moon,
   Search,
   Star,
-  Sun,
   X,
 } from "lucide-react";
 import { useTema } from "../contexts/ThemeContext";
@@ -239,7 +237,7 @@ export default function Jogos() {
 
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 rounded-xl bg-violet-700 px-6 py-3 font-bold text-white transition hover:bg-violet-800"
+              className="flex items-center justify-center gap-2 rounded-xl bg-violet-700 px-6 py-3 font-bold text-white transition hover:bg-violet-800 cursor-pointer"
             >
               <Search size={20} />
               Buscar
@@ -265,7 +263,7 @@ export default function Jogos() {
             onChange={(e) => {
               setOrdenacao(e.target.value as Ordenacao);
             }}
-            className={`rounded-lg border px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500 ${
+            className={`rounded-lg border px-3 py-2 outline-none cursor-pointer focus:ring-2 focus:ring-violet-500 ${
               tema?.temaEscuro
                 ? "border-violet-800 bg-[#211b2b] text-white"
                 : "border-violet-200 bg-white"
@@ -287,7 +285,7 @@ export default function Jogos() {
 
           <button
             onClick={buscarJogos}
-            className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white hover:bg-violet-800"
+            className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white cursor-pointer hover:bg-violet-800"
           >
             Aplicar
           </button>
@@ -309,7 +307,7 @@ export default function Jogos() {
             <button
               onClick={() => setModoExibicao("grid")}
               title="Exibição em grade"
-              className={`p-2 ${
+              className={`p-2 cursor-pointer ${
                 modoExibicao === "grid"
                   ? "bg-violet-700 text-white"
                   : tema?.temaEscuro
@@ -323,7 +321,7 @@ export default function Jogos() {
             <button
               onClick={() => setModoExibicao("list")}
               title="Exibição em lista"
-              className={`p-2 ${
+              className={`p-2 cursor-pointer ${
                 modoExibicao === "list"
                   ? "bg-violet-700 text-white"
                   : tema?.temaEscuro
@@ -413,7 +411,7 @@ export default function Jogos() {
 
                     <button
                       onClick={() => abrirModal(jogo)}
-                      className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white transition hover:bg-violet-800"
+                      className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white transition hover:bg-violet-800 cursor-pointer"
                     >
                       Saiba mais
                     </button>
@@ -475,7 +473,7 @@ export default function Jogos() {
 
                     <button
                       onClick={() => abrirModal(jogo)}
-                      className="rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800"
+                      className="rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800 cursor-pointer"
                     >
                       Saiba mais
                     </button>
