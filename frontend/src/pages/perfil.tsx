@@ -22,9 +22,7 @@ export default function Perfil() {
   useEffect(() => {
     if (nick === auth?.usuario?.nick) {
       setEdicaoPerm(true);
-      console.log("Edição liberada");
     }
-    console.log(edicaoPerm);
   });
 
   type Usuario = {
@@ -85,10 +83,6 @@ export default function Perfil() {
     buscarPerfil();
     buscarJogos();
   }, [nick]);
-
-  useEffect(() => {
-    console.log("Jogos mudou:", jogos);
-  }, [jogos]);
 
   function salvarInformacoes() {
     setTextoInformacoes(informacoes);
@@ -288,9 +282,9 @@ export default function Perfil() {
           </div>
 
           <div className="mt-4 ml-4 flex flex-col">
-            <h1 className="text-[22px]">{dados?.nome}</h1>
+            <h1 className="text-[22px] font-semibold">{dados?.nome}</h1>
 
-            <h2 className="text-[16px]">@{dados?.nick}</h2>
+            <h2 className="text-[16px] font-semibold">@{dados?.nick}</h2>
 
             {/* ADICIONAR INFORMAÇÕES */}
             {!editandoInfo && !textoInformacoes && (
@@ -375,12 +369,12 @@ export default function Perfil() {
         {/* JOGOS */}
         <div
           className={`w-full border-t ${
-            tema?.temaEscuro
-              ? "border-violet-900"
-              : "border-violet-100"
+            tema?.temaEscuro ? "border-violet-900" : "border-violet-100"
           }`}
         >
-          <h1 className="px-12 pt-6 pb-4 text-2xl font-semibold ">Jogos Adicionados à Lista</h1>
+          <h1 className="px-12 pt-6 pb-4 text-2xl font-semibold">
+            Jogos Adicionados à Lista
+          </h1>
 
           {carregando && (
             <div className="flex justify-center py-20">
@@ -388,16 +382,17 @@ export default function Perfil() {
             </div>
           )}
 
-          <div className="grid grid-cols-4 gap-3 px-12 pb-4">
-            {jogos.slice(0, 4).map((jogo) => (
+          <div className="grid gap-3 px-12 pb-4 md:grid-cols-3 lg:grid-cols-4">
+            {jogos.slice(0, 4).map((jogo, index) => (
               <div
-                className={`overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                key={jogo.id}
+                className={` ${index >= 1 ? "hidden md:block" : ""} ${index >= 3 ? "md:hidden lg:block" : ""} overflow-hidden rounded-2xl border shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
                   tema?.temaEscuro
                     ? "border-violet-900 bg-[#211b2b]"
                     : "border-violet-100 bg-white"
                 }`}
               >
-                <div className="relative" key={jogo.id}>
+                <div className="relative">
                   <img
                     src={jogo.background_image}
                     alt="#"
@@ -405,7 +400,7 @@ export default function Perfil() {
                   />
 
                   <div className="absolute top-3 right-3 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-white">
-                    {jogo.rating}{" "}
+                    {jogo.rating}
                     <Star size={17} fill="#F1C338" color="#F1C338" />
                   </div>
                 </div>

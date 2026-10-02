@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useTema } from "../contexts/ThemeContext";
 
-const API_KEY = import.meta.env.VITE_RAWG_API_KEY;
+const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
 
 type Jogo = {
   id: number;
@@ -55,13 +55,16 @@ const api = import.meta.env.VITE_API_URL;
 export default function Jogos() {
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [busca, setBusca] = useState("");
+  const [adicionado, setAdicionado] = useState(false);
+  const [erroAdd, setErroAdd] = useState("");
+
   const [ordenacao, setOrdenacao] =
     useState<Ordenacao>("relevance");
 
   const [modoExibicao, setModoExibicao] =
     useState<ModoExibicao>("grid");
 
-  const [temaEscuro, setTemaEscuro] = useState(false);
+  const [, setTemaEscuro] = useState(false);
 
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
@@ -78,7 +81,7 @@ export default function Jogos() {
 
     try {
       const parametros = new URLSearchParams({
-        key: API_KEY,
+        key: rawgKey,
         page_size: "20",
       });
 
@@ -114,11 +117,13 @@ export default function Jogos() {
 
   async function abrirModal(jogo: Jogo) {
     setJogoSelecionado(jogo);
+    setErroAdd("")
+    setAdicionado(false)
     modal.current?.showModal();
 
     try {
       const resposta = await fetch(
-        `https://api.rawg.io/api/games/${jogo.id}?key=${API_KEY}`
+        `https://api.rawg.io/api/games/${jogo.id}?key=${rawgKey}`
       );
 
       if (!resposta.ok) {
@@ -151,7 +156,16 @@ export default function Jogos() {
           "Content-Type": "application/json",
         },
       });
-      console.log(resposta)
+    const dados = await resposta.json();
+
+      if (resposta.ok) {
+        setAdicionado(true);
+      }
+      if (!resposta.ok) {
+        setErroAdd(dados.erro)
+        return
+      }
+      setErroAdd("")
   }
 
   function fecharModal() {
@@ -165,7 +179,6 @@ export default function Jogos() {
     if (temaSalvo === "escuro") {
       setTemaEscuro(true);
     }
-
     buscarJogos();
   }, []);
 
@@ -584,8 +597,8 @@ export default function Jogos() {
                 )}
               <div className="flex gap-1">
                 {/*ADICIONAR LISTA*/}
-                <button className="mt-6 inline-block rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800" onClick={() => jogoSelecionado && adicionarJogo(jogoSelecionado.id)}>
-                  Adicionar em Minha Lista
+                <button className={`mt-6 inline-block rounded-lg ${adicionado ? "bg-violet-900" : "bg-violet-700" }  px-5 py-2 font-semibold text-white hover:bg-violet-800`} onClick={() => jogoSelecionado && adicionarJogo(jogoSelecionado.id)}>
+                  {adicionado ? "Adicionado à Lista" : "Adicionar em Minha Lista"}
                 </button>
                 {/* SITE */}
                 {jogoSelecionado.website && (
@@ -599,6 +612,11 @@ export default function Jogos() {
                   </a>
                 )}
               </div>
+              {erroAdd && (
+                <div>
+                  <p className="ml-1 text-red-700">{erroAdd}</p>
+                </div>
+              )}
             </div>
           </div>
         )}

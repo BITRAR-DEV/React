@@ -181,6 +181,45 @@ app.post("/jogos/:rawgId", async (req, res) => {
   }
 });
 
+app.delete("/jogosdel/:rawgId", async (req, res) => {
+  const userId = req.session.usuarioId;
+  const rawgId = Number(req.params.rawgId);
+
+  if (!userId) {
+    return res.status(401).json({ erro: "Não logado!" });
+  }
+
+  const jogoExistente = await prisma.jogoUsuario.findUnique({
+    where: {
+      usuarioId_rawgId: {
+        usuarioId: userId,
+        rawgId: rawgId,
+      },
+    },
+  });
+
+  if (!jogoExistente) {
+    return res.status(409).json({
+      erro: "Esse jogo não está na sua lista",
+    });
+  }
+
+  try {
+    const jogos = await prisma.jogoUsuario.delete({
+      where: {
+        usuarioId_rawgId: {
+          usuarioId: userId,
+          rawgId: rawgId,
+        },
+      },
+    });
+
+    return res.json(jogos);
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno no Servidor" });
+  }
+});
+
 app.patch("/perfil", async (req, res) => {
   const { fotoPerfil, banner } = req.body;
 

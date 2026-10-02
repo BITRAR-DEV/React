@@ -1,12 +1,9 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Gamepad2 } from "lucide-react";
 import Logo from "../assets/Logo.png";
-import { AuthContext } from "../contexts/AuthContext";
 import { useTema } from "../contexts/ThemeContext";
 
 export default function Inicio() {
-  const auth = useContext(AuthContext);
   const tema = useTema();
 
   return (
@@ -26,13 +23,13 @@ export default function Inicio() {
           </div>
 
           <div className="text-[18px]">
-            <p className="md:leading-6.5">
-              Aqui você encontra vários jogos grátis para jogar e se divertir
-              com a melhor experiência de jogos da web.
+            <p className="md:leading-6.5 font-semibold">
+              Encontre, salve e compartilhe seus jogos favoritos.
+              
             </p>
 
             <p className="mt-2">
-              Entre abaixo em nosso catálogo e explore nossos jogos.
+              Explore novos títulos, monte sua própria coleção e personalize seu perfil para mostrar os jogos que fazem parte da sua história.
             </p>
           </div>
 
