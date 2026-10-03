@@ -1,13 +1,6 @@
 import { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import {
-  Gamepad2,
-  Menu,
-  LogOut,
-  Pencil,
-  Sun,
-  Moon,
-} from "lucide-react";
+import { Gamepad2, Menu, LogOut, Pencil, Sun, Moon } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useTema } from "../contexts/ThemeContext";
 
@@ -15,7 +8,7 @@ const api = import.meta.env.VITE_API_URL;
 
 export default function Navbar() {
   const auth = useContext(AuthContext);
-  const tema = useTema()
+  const tema = useTema();
   const navigate = useNavigate();
 
   const [aberto, setAberto] = useState(false);
@@ -47,10 +40,7 @@ export default function Navbar() {
     <nav className="flex w-full items-center justify-between bg-violet-950 p-4 text-[18px] font-medium text-white shadow-[0_0_10px] shadow-gray-800">
       {/* Logo */}
       <div className="flex gap-2">
-        <Link
-          to="/"
-          className="flex cursor-pointer gap-2 text-3xl select-none"
-        >
+        <Link to="/" className="flex cursor-pointer gap-2 text-3xl select-none">
           Game Stream
           <Gamepad2 size={42} />
         </Link>
@@ -63,10 +53,8 @@ export default function Navbar() {
         </button>
 
         <div
-          className={`fixed top-15 -right-px flex flex-col items-center gap-4 overflow-hidden rounded-bl-xl bg-violet-900 transition-all duration-500 ease-in-out md:hidden ${
-            aberto
-              ? "max-h-60 p-5 opacity-100"
-              : "max-h-0 p-0 opacity-0"
+          className={`fixed top-15 -right-px flex flex-col items-center gap-4 overflow-hidden rounded-bl-xl bg-violet-950 transition-all duration-500 ease-in-out md:hidden ${
+            aberto ? "max-h-60 p-5 opacity-100" : "max-h-0 p-0 opacity-0"
           }`}
         >
           <NavLink className={estiloLink} end to="/">
@@ -77,15 +65,8 @@ export default function Navbar() {
             Jogos
           </NavLink>
 
-          <NavLink className={estiloLink} to="/sobre">
-            Sobre Mim
-          </NavLink>
-
           {auth?.usuario ? (
-            <NavLink
-              className={estiloLink}
-              to={`/perfil/${auth.usuario.nick}`}
-            >
+            <NavLink className={estiloLink} to={`/perfil/${auth.usuario.nick}`}>
               Perfil
             </NavLink>
           ) : (
@@ -112,10 +93,7 @@ export default function Navbar() {
 
         {auth?.usuario ? (
           <div className="group relative">
-            <NavLink
-              className={estiloLink}
-              to={`/perfil/${auth.usuario.nick}`}
-            >
+            <NavLink className={estiloLink} to={`/perfil/${auth.usuario.nick}`}>
               Perfil
             </NavLink>
 
@@ -162,11 +140,7 @@ export default function Navbar() {
               : "bg-violet-950 text-white hover:bg-[#240658]"
           }`}
         >
-          {tema?.temaEscuro ? (
-            <Sun size={20} />
-          ) : (
-            <Moon size={20} />
-          )}
+          {tema?.temaEscuro ? <Sun size={20} /> : <Moon size={20} />}
         </button>
       </div>
     </nav>

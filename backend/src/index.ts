@@ -4,14 +4,13 @@ import prisma from "./lib/prisma.js";
 import bcrypt from "bcrypt";
 import session from "express-session";
 import { use } from "react";
+import { error } from "node:console";
 
 const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-    ],
+    origin: ["http://localhost:5173"],
     credentials: true,
   }),
 );
@@ -29,7 +28,7 @@ app.use(
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
     },
-  })
+  }),
 );
 
 app.get("/", (req, res) => {
@@ -340,7 +339,7 @@ app.post("/usuarios", async (req, res) => {
 
     const senhaHash = await bcrypt.hash(senha, 12);
 
-    await prisma.usuario.create({
+    const usuario = await prisma.usuario.create({
       data: {
         nome,
         email,
@@ -349,8 +348,16 @@ app.post("/usuarios", async (req, res) => {
       },
     });
 
+    req.session.usuarioId = usuario.id;
+
     return res.status(201).json({
       mensagem: "Usuario criado com sucesso!",
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        nick: usuario.nick,
+      },
     });
   } catch (error) {
     res.status(500).json({ erro: "Erro interno no servidor" });

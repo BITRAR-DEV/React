@@ -1,4 +1,4 @@
-import { NavLink, Navigate } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Eye, EyeOff, Moon, Sun } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
@@ -10,13 +10,7 @@ export default function Cadastro() {
   const auth = useContext(AuthContext);
   const tema = useTema();
 
-  if (auth?.carregando) {
-    return <p>Carregando...</p>;
-  }
-  
-   if (auth?.usuario) {
-    return <Navigate to="/perfil" replace />; 
-  }
+  const navigate = useNavigate();
   const [mostrar, setMostrar] = useState(false);
 
   const [form, setForm] = useState({
@@ -31,17 +25,19 @@ export default function Cadastro() {
   const [senhaerro, setSenhaErro] = useState(false);
   const [emailerro, setEmailErro] = useState("");
 
-  const senhaErroEstilo = senhaerro
-    ? "bg-red-100"
-    : "";
+  if (auth?.carregando) {
+    return <p>Carregando...</p>;
+  }
 
-  const emailErroEstilo = emailerro
-    ? "bg-red-100"
-    : "";
+  if (auth?.usuario) {
+    return <Navigate to={`/perfil/${auth.usuario.nick}`} replace />;
+  }
 
-  async function cadastrar(
-    e: React.SubmitEvent<HTMLFormElement>
-  ) {
+  const senhaErroEstilo = senhaerro ? "bg-red-100" : "";
+
+  const emailErroEstilo = emailerro ? "bg-red-100" : "";
+
+  async function cadastrar(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setSenhaErro(false);
@@ -55,6 +51,7 @@ export default function Cadastro() {
     try {
       const resposta = await fetch(`${api}/usuarios`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -72,19 +69,10 @@ export default function Cadastro() {
         throw new Error(dados.erro);
       }
 
-      setForm({
-        id: 0,
-        name: "",
-        email: "",
-        senha: "",
-        csenha: "",
-        nick: "",
-      });
+      auth?.setUsuario(dados.usuario);
     } catch (error) {
       const mensagem =
-        error instanceof Error
-          ? error.message
-          : "Erro inesperado!";
+        error instanceof Error ? error.message : "Erro inesperado!";
 
       setEmailErro(mensagem);
     }
@@ -110,25 +98,19 @@ export default function Cadastro() {
           <div className="mb-6 flex flex-col items-center justify-center">
             <h2
               className={`mb-1 text-3xl font-bold ${
-                tema?.temaEscuro
-                  ? "text-violet-300"
-                  : "text-violet-950"
+                tema?.temaEscuro ? "text-violet-300" : "text-violet-950"
               }`}
             >
               Bem Vindo!
             </h2>
 
             <p className="text-center text-lg">
-              Para <strong>cadastrar-se</strong>, insira as
-              informações abaixo.
+              Para <strong>cadastrar-se</strong>, insira as informações abaixo.
             </p>
           </div>
 
           <div className="flex flex-col gap-2 px-6">
-            <form
-              onSubmit={cadastrar}
-              className="flex flex-col gap-2"
-            >
+            <form onSubmit={cadastrar} className="flex flex-col gap-2">
               {/* NOME */}
               <input
                 type="text"
@@ -210,24 +192,12 @@ export default function Cadastro() {
                 <button
                   type="button"
                   onClick={() => setMostrar(!mostrar)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="absolute top-1/2 right-3 -translate-y-1/2"
                 >
                   {mostrar ? (
-                    <Eye
-                      color={
-                        tema?.temaEscuro
-                          ? "#c4b5fd"
-                          : "#2f0d68"
-                      }
-                    />
+                    <Eye color={tema?.temaEscuro ? "#c4b5fd" : "#2f0d68"} />
                   ) : (
-                    <EyeOff
-                      color={
-                        tema?.temaEscuro
-                          ? "#c4b5fd"
-                          : "#2f0d68"
-                      }
-                    />
+                    <EyeOff color={tema?.temaEscuro ? "#c4b5fd" : "#2f0d68"} />
                   )}
                 </button>
               </div>
@@ -253,16 +223,10 @@ export default function Cadastro() {
                 />
 
                 {senhaerro && (
-                  <p className="pl-2 text-red-600">
-                    As senhas não coincidem!
-                  </p>
+                  <p className="pl-2 text-red-600">As senhas não coincidem!</p>
                 )}
 
-                {emailerro && (
-                  <p className="pl-2 text-red-600">
-                    {emailerro}
-                  </p>
-                )}
+                {emailerro && <p className="pl-2 text-red-600">{emailerro}</p>}
               </div>
 
               {/* BOTÃO */}
@@ -276,17 +240,13 @@ export default function Cadastro() {
 
             {/* DIVISOR */}
             <div
-              className={`flex select-none items-center ${
-                tema?.temaEscuro
-                  ? "text-gray-400"
-                  : "text-gray-500"
+              className={`flex items-center select-none ${
+                tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
               }`}
             >
               <hr className="flex-1" />
 
-              <p className="mx-1.5 mb-0.5">
-                Já tem um cadastro?
-              </p>
+              <p className="mx-1.5 mb-0.5">Já tem um cadastro?</p>
 
               <hr className="flex-1" />
             </div>

@@ -5,6 +5,7 @@ import { Star, Pencil, ArrowRight } from "lucide-react";
 import FotoPadrao from "../assets/FotoPadrao.jfif";
 import Overlay from "../components/overlay";
 import { useTema } from "../contexts/ThemeContext";
+import BannerPadrao from "../assets/BannerPadrao.jpg"
 
 const api = import.meta.env.VITE_API_URL;
 const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
@@ -235,9 +236,9 @@ export default function Perfil() {
             className={`group relative block ${edicaoPerm && "cursor-pointer"}`}
           >
             <img
-              src={dados?.banner}
-              alt="Banner"
-              className="h-50 w-full object-cover"
+              src={dados?.banner || BannerPadrao}
+              alt=""
+              className="h-50 w-full object-cover bg-gray-400"
             />
             {edicaoPerm && <Overlay size={40} />}
           </label>
