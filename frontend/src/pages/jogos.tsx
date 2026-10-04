@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Grid3X3,
-  List,
-  Search,
-  Star,
-  X,
-} from "lucide-react";
+import { Grid3X3, List, Search, Star, X } from "lucide-react";
 import { useTema } from "../contexts/ThemeContext";
 
 const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
@@ -33,12 +27,7 @@ type Jogo = {
 };
 
 type Ordenacao =
-  | "relevance"
-  | "name"
-  | "-released"
-  | "released"
-  | "-rating"
-  | "-metacritic";
+  "relevance" | "name" | "-released" | "released" | "-rating" | "-metacritic";
 
 type ModoExibicao = "grid" | "list";
 
@@ -53,27 +42,27 @@ function formatarData(data: string) {
 const api = import.meta.env.VITE_API_URL;
 
 export default function Jogos() {
+  useEffect(() => {
+    document.title = "Jogos | Game Stream";
+  }, []);
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [busca, setBusca] = useState("");
   const [adicionado, setAdicionado] = useState(false);
   const [erroAdd, setErroAdd] = useState("");
 
-  const [ordenacao, setOrdenacao] =
-    useState<Ordenacao>("relevance");
+  const [ordenacao, setOrdenacao] = useState<Ordenacao>("relevance");
 
-  const [modoExibicao, setModoExibicao] =
-    useState<ModoExibicao>("grid");
+  const [modoExibicao, setModoExibicao] = useState<ModoExibicao>("grid");
 
   const [, setTemaEscuro] = useState(false);
 
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
 
-  const [jogoSelecionado, setJogoSelecionado] =
-    useState<Jogo | null>(null);
+  const [jogoSelecionado, setJogoSelecionado] = useState<Jogo | null>(null);
 
   const modal = useRef<HTMLDialogElement>(null);
-  const tema = useTema()
+  const tema = useTema();
 
   async function buscarJogos() {
     setCarregando(true);
@@ -94,7 +83,7 @@ export default function Jogos() {
       }
 
       const resposta = await fetch(
-        `https://api.rawg.io/api/games?${parametros.toString()}`
+        `https://api.rawg.io/api/games?${parametros.toString()}`,
       );
 
       if (!resposta.ok) {
@@ -108,7 +97,7 @@ export default function Jogos() {
       console.error(error);
 
       setErro(
-        "Não foi possível carregar os jogos. Verifique sua conexão e a API Key."
+        "Não foi possível carregar os jogos. Verifique sua conexão e a API Key.",
       );
     } finally {
       setCarregando(false);
@@ -117,13 +106,13 @@ export default function Jogos() {
 
   async function abrirModal(jogo: Jogo) {
     setJogoSelecionado(jogo);
-    setErroAdd("")
-    setAdicionado(false)
+    setErroAdd("");
+    setAdicionado(false);
     modal.current?.showModal();
 
     try {
       const resposta = await fetch(
-        `https://api.rawg.io/api/games/${jogo.id}?key=${rawgKey}`
+        `https://api.rawg.io/api/games/${jogo.id}?key=${rawgKey}`,
       );
 
       if (!resposta.ok) {
@@ -150,22 +139,22 @@ export default function Jogos() {
 
   async function adicionarJogo(jogoId: number) {
     const resposta = await fetch(`${api}/jogos/${jogoId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const dados = await resposta.json();
 
-      if (resposta.ok) {
-        setAdicionado(true);
-      }
-      if (!resposta.ok) {
-        setErroAdd(dados.erro)
-        return
-      }
-      setErroAdd("")
+    if (resposta.ok) {
+      setAdicionado(true);
+    }
+    if (!resposta.ok) {
+      setErroAdd(dados.erro);
+      return;
+    }
+    setErroAdd("");
   }
 
   function fecharModal() {
@@ -195,7 +184,7 @@ export default function Jogos() {
         className={`border-b px-5 py-8 transition-colors md:px-10 ${
           tema?.temaEscuro
             ? "border-violet-900 bg-[#211b2b]"
-            : "border-violet-200 bg-blue-150"
+            : "bg-blue-150 border-violet-200"
         }`}
       >
         <div className="mx-auto max-w-7xl">
@@ -207,9 +196,7 @@ export default function Jogos() {
 
               <p
                 className={`mt-2 ${
-                  tema?.temaEscuro
-                    ? "text-gray-300"
-                    : "text-violet-700"
+                  tema?.temaEscuro ? "text-gray-300" : "text-violet-700"
                 }`}
               >
                 Explore jogos disponíveis na RAWG
@@ -228,10 +215,8 @@ export default function Jogos() {
             <div className="relative flex-1">
               <Search
                 size={22}
-                className={`absolute left-4 top-1/2 -translate-y-1/2 ${
-                  tema?.temaEscuro
-                    ? "text-gray-400"
-                    : "text-violet-500"
+                className={`absolute top-1/2 left-4 -translate-y-1/2 ${
+                  tema?.temaEscuro ? "text-gray-400" : "text-violet-500"
                 }`}
               />
 
@@ -240,7 +225,7 @@ export default function Jogos() {
                 value={busca}
                 onChange={(e) => setBusca(e.target.value)}
                 placeholder="Buscar jogos..."
-                className={`w-full rounded-xl border py-3 pl-12 pr-4 outline-none transition focus:ring-2 focus:ring-violet-500 ${
+                className={`w-full rounded-xl border py-3 pr-4 pl-12 transition outline-none focus:ring-2 focus:ring-violet-500 ${
                   tema?.temaEscuro
                     ? "border-violet-800 bg-[#15111c] text-white placeholder:text-gray-500"
                     : "border-violet-200 bg-white text-gray-900"
@@ -250,7 +235,7 @@ export default function Jogos() {
 
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 rounded-xl bg-violet-700 px-6 py-3 font-bold text-white transition hover:bg-violet-800 cursor-pointer"
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-violet-700 px-6 py-3 font-bold text-white transition hover:bg-violet-800"
             >
               <Search size={20} />
               Buscar
@@ -263,10 +248,7 @@ export default function Jogos() {
       <section className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-10">
         {/* ORDENAÇÃO */}
         <div className="flex items-center gap-3">
-          <label
-            htmlFor="ordenacao"
-            className="font-semibold"
-          >
+          <label htmlFor="ordenacao" className="font-semibold">
             Ordenar por:
           </label>
 
@@ -276,7 +258,7 @@ export default function Jogos() {
             onChange={(e) => {
               setOrdenacao(e.target.value as Ordenacao);
             }}
-            className={`rounded-lg border px-3 py-2 outline-none cursor-pointer focus:ring-2 focus:ring-violet-500 ${
+            className={`cursor-pointer rounded-lg border px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500 ${
               tema?.temaEscuro
                 ? "border-violet-800 bg-[#211b2b] text-white"
                 : "border-violet-200 bg-white"
@@ -285,20 +267,14 @@ export default function Jogos() {
             <option value="relevance">Relevância</option>
             <option value="-rating">Melhor avaliação</option>
             <option value="name">Nome</option>
-            <option value="-released">
-              Mais recentes
-            </option>
-            <option value="released">
-              Mais antigos
-            </option>
-            <option value="-metacritic">
-              Metacritic
-            </option>
+            <option value="-released">Mais recentes</option>
+            <option value="released">Mais antigos</option>
+            <option value="-metacritic">Metacritic</option>
           </select>
 
           <button
             onClick={buscarJogos}
-            className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white cursor-pointer hover:bg-violet-800"
+            className="cursor-pointer rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white hover:bg-violet-800"
           >
             Aplicar
           </button>
@@ -306,21 +282,17 @@ export default function Jogos() {
 
         {/* MODO DE EXIBIÇÃO */}
         <div className="flex items-center gap-3">
-          <span className="font-semibold">
-            Opções de exibição:
-          </span>
+          <span className="font-semibold">Opções de exibição:</span>
 
           <div
             className={`flex overflow-hidden rounded-lg border ${
-              tema?.temaEscuro
-                ? "border-violet-800"
-                : "border-violet-200"
+              tema?.temaEscuro ? "border-violet-800" : "border-violet-200"
             }`}
           >
             <button
               onClick={() => setModoExibicao("grid")}
               title="Exibição em grade"
-              className={`p-2 cursor-pointer ${
+              className={`cursor-pointer p-2 ${
                 modoExibicao === "grid"
                   ? "bg-violet-700 text-white"
                   : tema?.temaEscuro
@@ -334,7 +306,7 @@ export default function Jogos() {
             <button
               onClick={() => setModoExibicao("list")}
               title="Exibição em lista"
-              className={`p-2 cursor-pointer ${
+              className={`cursor-pointer p-2 ${
                 modoExibicao === "list"
                   ? "bg-violet-700 text-white"
                   : tema?.temaEscuro
@@ -352,9 +324,7 @@ export default function Jogos() {
       <main className="mx-auto max-w-7xl px-5 pb-12 md:px-10">
         {carregando && (
           <div className="flex justify-center py-20">
-            <p className="text-xl font-semibold">
-              Carregando jogos...
-            </p>
+            <p className="text-xl font-semibold">Carregando jogos...</p>
           </div>
         )}
 
@@ -366,13 +336,9 @@ export default function Jogos() {
 
         {!carregando && !erro && jogos.length === 0 && (
           <div className="py-20 text-center">
-            <h2 className="text-2xl font-bold">
-              Nenhum jogo encontrado
-            </h2>
+            <h2 className="text-2xl font-bold">Nenhum jogo encontrado</h2>
 
-            <p className="mt-2">
-              Tente pesquisar por outro nome.
-            </p>
+            <p className="mt-2">Tente pesquisar por outro nome.</p>
           </div>
         )}
 
@@ -395,28 +361,20 @@ export default function Jogos() {
                     className="h-56 w-full object-cover"
                   />
 
-                  <div className="absolute right-3 top-3 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-white">
-                    <Star
-                      size={17}
-                      fill="#F1C338"
-                      color="#F1C338"
-                    />
+                  <div className="absolute top-3 right-3 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-white">
+                    <Star size={17} fill="#F1C338" color="#F1C338" />
 
                     {jogo.rating?.toFixed(1)}
                   </div>
                 </div>
 
                 <div className="p-5">
-                  <h2 className="truncate text-xl font-bold">
-                    {jogo.name}
-                  </h2>
+                  <h2 className="truncate text-xl font-bold">{jogo.name}</h2>
 
                   <div className="mt-4 flex items-center justify-between">
                     <span
                       className={`text-sm ${
-                        tema?.temaEscuro
-                          ? "text-gray-400"
-                          : "text-gray-500"
+                        tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
                       {formatarData(jogo.released)}
@@ -424,7 +382,7 @@ export default function Jogos() {
 
                     <button
                       onClick={() => abrirModal(jogo)}
-                      className="rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white transition hover:bg-violet-800 cursor-pointer"
+                      className="cursor-pointer rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white transition hover:bg-violet-800"
                     >
                       Saiba mais
                     </button>
@@ -456,16 +414,10 @@ export default function Jogos() {
                 <div className="flex flex-1 flex-col justify-between p-5">
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <h2 className="text-2xl font-bold">
-                        {jogo.name}
-                      </h2>
+                      <h2 className="text-2xl font-bold">{jogo.name}</h2>
 
                       <span className="flex items-center gap-1 font-semibold">
-                        <Star
-                          size={18}
-                          fill="#F1C338"
-                          color="#F1C338"
-                        />
+                        <Star size={18} fill="#F1C338" color="#F1C338" />
 
                         {jogo.rating?.toFixed(1)}
                       </span>
@@ -475,18 +427,15 @@ export default function Jogos() {
                   <div className="mt-5 flex items-center justify-between gap-3">
                     <span
                       className={`text-sm ${
-                        tema?.temaEscuro
-                          ? "text-gray-400"
-                          : "text-gray-500"
+                        tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
-                      Lançamento:{" "}
-                      {formatarData(jogo.released)}
+                      Lançamento: {formatarData(jogo.released)}
                     </span>
 
                     <button
                       onClick={() => abrirModal(jogo)}
-                      className="rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800 cursor-pointer"
+                      className="cursor-pointer rounded-lg bg-violet-700 px-5 py-2 font-semibold text-white hover:bg-violet-800"
                     >
                       Saiba mais
                     </button>
@@ -512,7 +461,7 @@ export default function Jogos() {
             {/* BOTÃO FECHAR */}
             <button
               onClick={fecharModal}
-              className="absolute right-4 top-4 z-10 rounded-lg bg-violet-700 p-2 text-white hover:bg-violet-800"
+              className="absolute top-4 right-4 z-10 rounded-lg bg-violet-700 p-2 text-white hover:bg-violet-800"
             >
               <X size={24} />
             </button>
@@ -531,12 +480,7 @@ export default function Jogos() {
                 </h2>
 
                 <div className="flex items-center gap-2 font-bold">
-                  <Star
-                    size={22}
-                    fill="#F1C338"
-                    color="#F1C338"
-                  />
-
+                  <Star size={22} fill="#F1C338" color="#F1C338" />
                   {jogoSelecionado.rating?.toFixed(1)}/5
                 </div>
               </div>
@@ -545,60 +489,57 @@ export default function Jogos() {
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div
                   className={`rounded-xl p-4 ${
-                    tema?.temaEscuro
-                      ? "bg-[#17131f]"
-                      : "bg-violet-50"
+                    tema?.temaEscuro ? "bg-[#17131f]" : "bg-violet-50"
                   }`}
                 >
                   <strong>Lançamento:</strong>
 
                   <p className="mt-1">
-                    {formatarData(
-                      jogoSelecionado.released
-                    )}
+                    {formatarData(jogoSelecionado.released)}
                   </p>
                 </div>
 
                 <div
                   className={`rounded-xl p-4 ${
-                    tema?.temaEscuro
-                      ? "bg-[#17131f]"
-                      : "bg-violet-50"
+                    tema?.temaEscuro ? "bg-[#17131f]" : "bg-violet-50"
                   }`}
                 >
                   <strong>Metacritic:</strong>
 
                   <p className="mt-1">
-                    {jogoSelecionado.metacritic ??
-                      "Não informado"}
+                    {jogoSelecionado.metacritic ?? "Não informado"}
                   </p>
                 </div>
               </div>
 
               {/* GÊNEROS */}
-              {jogoSelecionado.genres &&
-                jogoSelecionado.genres.length > 0 && (
-                  <div className="mt-5">
-                    <strong>Gêneros:</strong>
+              {jogoSelecionado.genres && jogoSelecionado.genres.length > 0 && (
+                <div className="mt-5">
+                  <strong>Gêneros:</strong>
 
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {jogoSelecionado.genres.map(
-                        (genero) => (
-                          <span
-                            key={genero.id}
-                            className="rounded-full bg-violet-700 px-3 py-1 text-sm text-white"
-                          >
-                            {genero.name}
-                          </span>
-                        )
-                      )}
-                    </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {jogoSelecionado.genres.map((genero) => (
+                      <span
+                        key={genero.id}
+                        className="rounded-full bg-violet-700 px-3 py-1 text-sm text-white"
+                      >
+                        {genero.name}
+                      </span>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
               <div className="flex gap-1">
                 {/*ADICIONAR LISTA*/}
-                <button className={`mt-6 inline-block rounded-lg ${adicionado ? "bg-violet-900" : "bg-violet-700" }  px-5 py-2 font-semibold text-white hover:bg-violet-800`} onClick={() => jogoSelecionado && adicionarJogo(jogoSelecionado.id)}>
-                  {adicionado ? "Adicionado à Lista" : "Adicionar em Minha Lista"}
+                <button
+                  className={`mt-6 inline-block rounded-lg ${adicionado ? "bg-violet-900" : "bg-violet-700"} px-5 py-2 font-semibold text-white hover:bg-violet-800`}
+                  onClick={() =>
+                    jogoSelecionado && adicionarJogo(jogoSelecionado.id)
+                  }
+                >
+                  {adicionado
+                    ? "Adicionado à Lista"
+                    : "Adicionar em Minha Lista"}
                 </button>
                 {/* SITE */}
                 {jogoSelecionado.website && (

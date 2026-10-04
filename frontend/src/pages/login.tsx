@@ -12,6 +12,9 @@ import { useTema } from "../contexts/ThemeContext";
 const api = import.meta.env.VITE_API_URL ;
 
 export default function Login() {
+  useEffect(() => {
+    document.title = "Login | Game Stream";
+  }, []);
   const navigate = useNavigate();
   const tema = useTema();
 

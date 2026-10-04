@@ -7,6 +7,10 @@ import { useTema } from "../contexts/ThemeContext";
 const api = import.meta.env.VITE_API_URL;
 
 export default function Cadastro() {
+  useEffect(() => {
+    document.title = "Cadastro | Game Stream";
+  }, []);
+
   const auth = useContext(AuthContext);
   const tema = useTema();
 

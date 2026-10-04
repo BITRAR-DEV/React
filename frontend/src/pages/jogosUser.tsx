@@ -38,6 +38,9 @@ const api = import.meta.env.VITE_API_URL;
 
 export default function JogosUser() {
   const { nick } = useParams();
+  useEffect(() => {
+    document.title = (`Jogos de ${nick} | Game Stream`);
+  }, []);
   const auth = useContext(AuthContext);
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [carregando, setCarregando] = useState(false);

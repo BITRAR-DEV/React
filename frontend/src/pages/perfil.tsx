@@ -5,13 +5,16 @@ import { Star, Pencil, ArrowRight } from "lucide-react";
 import FotoPadrao from "../assets/FotoPadrao.jfif";
 import Overlay from "../components/overlay";
 import { useTema } from "../contexts/ThemeContext";
-import BannerPadrao from "../assets/BannerPadrao.jpg"
+import BannerPadrao from "../assets/BannerPadrao.jpg";
 
 const api = import.meta.env.VITE_API_URL;
 const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
 
 export default function Perfil() {
   const { nick } = useParams();
+  useEffect(() => {
+    document.title = (`Perfil de ${nick} | Game Stream`);
+  }, []);
 
   const auth = useContext(AuthContext);
   const tema = useTema();
@@ -238,7 +241,7 @@ export default function Perfil() {
             <img
               src={dados?.banner || BannerPadrao}
               alt=""
-              className="h-50 w-full object-cover bg-gray-400"
+              className="h-50 w-full bg-gray-400 object-cover"
             />
             {edicaoPerm && <Overlay size={40} />}
           </label>
