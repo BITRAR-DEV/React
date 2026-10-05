@@ -10,11 +10,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173",
+    "https://react-jade-iota.vercel.app"],
     credentials: true,
   }),
 );
 app.use(express.json());
+
+app.set("trust proxy", 1);
 
 app.use(
   session({
@@ -24,7 +27,7 @@ app.use(
 
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
     },
