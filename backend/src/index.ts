@@ -11,7 +11,7 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:5173",
-    "https://react-jade-iota.vercel.app"],
+    "https://react-bitrar.vercel.app"],
     credentials: true,
   }),
 );
@@ -28,7 +28,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24,
     },
   }),
