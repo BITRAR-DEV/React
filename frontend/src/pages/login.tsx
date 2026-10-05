@@ -3,8 +3,6 @@ import { NavLink, useNavigate, Navigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
-  Moon,
-  Sun,
 } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useTema } from "../contexts/ThemeContext";
@@ -26,16 +24,6 @@ export default function Login() {
   });
 
   const [loginErro, setLoginErro] = useState("");
-  
-  const [temaEscuro, setTemaEscuro] = useState(false);
-  
-  useEffect(() => {
-    const temaSalvo = localStorage.getItem("tema-jogos");
-
-    if (temaSalvo === "escuro") {
-      setTemaEscuro(true);
-    }
-  }, []);
   
   const auth = useContext(AuthContext);
   if (auth?.carregando) {
