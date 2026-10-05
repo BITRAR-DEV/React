@@ -10,8 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173",
-    "https://react-bitrar.vercel.app"],
+    origin: ["http://localhost:5173", "https://react-bitrar.vercel.app"],
     credentials: true,
   }),
 );
@@ -36,15 +35,6 @@ app.use(
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
-
-app.get("/usuarios", async (req, res) => {
-  try {
-    const usuarios = await prisma.usuario.findMany();
-    res.json(usuarios);
-  } catch (error) {
-    res.status(500).json({ error: "Erro interno no Servidor" });
-  }
 });
 
 app.get("/me", async (req, res) => {
@@ -95,6 +85,14 @@ app.get("/usuarios/:nick", async (req, res) => {
   const usuario = await prisma.usuario.findUnique({
     where: {
       nick: nick,
+    },
+    select: {
+      id: true,
+      nome: true,
+      nick: true,
+      fotoPerfil: true,
+      banner: true,
+      bio: true,
     },
   });
   return res.json(usuario);
@@ -359,10 +357,7 @@ app.patch("/editsenha", async (req, res) => {
       });
     }
 
-    const senhaCorreta = await bcrypt.compare(
-      senhaAtual,
-      usuario.senha
-    );
+    const senhaCorreta = await bcrypt.compare(senhaAtual, usuario.senha);
 
     if (!senhaCorreta) {
       return res.status(401).json({
@@ -384,7 +379,6 @@ app.patch("/editsenha", async (req, res) => {
     return res.json({
       mensagem: "Senha alterada com sucesso!",
     });
-
   } catch (error) {
     console.log(error);
 
@@ -452,8 +446,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
-
 app.post("/usuarios", async (req, res) => {
   const { nome, email, senha, nick } = req.body;
 
@@ -519,4 +511,4 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
-}); 
+});
