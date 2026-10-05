@@ -13,7 +13,7 @@ const rawgKey = import.meta.env.VITE_RAWG_API_KEY;
 export default function Perfil() {
   const { nick } = useParams();
   useEffect(() => {
-    document.title = (`Perfil de ${nick} | Game Stream`);
+    document.title = `Perfil de ${nick} | Game Stream`;
   }, []);
 
   const auth = useContext(AuthContext);
@@ -35,6 +35,7 @@ export default function Perfil() {
     nick: string;
     fotoPerfil: string;
     banner: string;
+    bio: string;
   };
 
   type Jogo = {
@@ -47,6 +48,7 @@ export default function Perfil() {
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [dados, setDados] = useState<Usuario | null>(null);
   const [carregando, setCarregando] = useState(false);
+  const [bio, setBio] = useState("");
 
   async function buscarPerfil() {
     try {
@@ -88,16 +90,6 @@ export default function Perfil() {
     buscarJogos();
   }, [nick]);
 
-  function salvarInformacoes() {
-    setTextoInformacoes(informacoes);
-    setEditandoInfo(false);
-  }
-
-  function cancelarEdicao() {
-    setInformacoes(textoInformacoes);
-    setEditandoInfo(false);
-  }
-
   async function mudarFoto(e: React.ChangeEvent<HTMLInputElement>) {
     const arquivo = e.target.files?.[0];
     const formData = new FormData();
@@ -124,7 +116,7 @@ export default function Perfil() {
 
       const dados = await resposta.json();
 
-      const atualizar = await fetch(`${api}/perfil`, {
+      const atualizar = await fetch(`${api}/editfotos`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -137,7 +129,7 @@ export default function Perfil() {
 
       const atualizou = await atualizar.json();
 
-      if (!atualizou.ok) {
+      if (!atualizar.ok) {
         throw new Error(atualizou.erro);
       }
     } catch (error) {
@@ -208,13 +200,40 @@ export default function Perfil() {
 
       const atualizou = await atualizar.json();
 
-      if (!atualizou.ok) {
+      if (!atualizar.ok) {
         throw new Error(atualizou.erro);
       }
     } catch (error) {
       console.log(error);
     } finally {
       buscarPerfil();
+    }
+  }
+
+  async function editarBio() {
+    try {
+      const atualizar = await fetch(`${api}/editbio`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          bio: bio,
+        }),
+      });
+
+      const atualizou = await atualizar.json();
+
+      if (!atualizar.ok) {
+        throw new Error(atualizou.erro);
+      }
+      
+      alert("Bio alterada")
+      setEditandoInfo(false)
+      buscarPerfil()
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -285,86 +304,58 @@ export default function Perfil() {
             )}
           </div>
 
-          <div className="mt-4 ml-4 flex flex-col">
+          <div className="mt-4 ml-4 max-w-[75%] flex flex-col">
             <h1 className="text-[22px] font-semibold">{dados?.nome}</h1>
 
             <h2 className="text-[16px] font-semibold">@{dados?.nick}</h2>
 
-            {/* ADICIONAR INFORMAÇÕES */}
-            {!editandoInfo && !textoInformacoes && (
-              <button
-                onClick={() => {
-                  setInformacoes("");
-                  setEditandoInfo(true);
-                }}
-                className="mt-1 flex items-center gap-1 self-start text-sm text-violet-400 hover:underline"
-              >
-                <Pencil size={15} />
-                Adicionar Informações
-              </button>
-            )}
+            <div className="mt-4 flex items-center gap-2">
+              <h2 className="text-[14px] font-semibold">Bio</h2>
 
-            {/* INFORMAÇÃO SALVA */}
-            {!editandoInfo && textoInformacoes && (
-              <div className="mt-2 flex items-start gap-2">
-                <p className="max-w-xl text-sm">{textoInformacoes}</p>
-
+              {edicaoPerm && (
                 <button
+                  className="cursor-pointer"
                   onClick={() => {
-                    setInformacoes(textoInformacoes);
+                    setBio(dados?.bio ?? "");
                     setEditandoInfo(true);
                   }}
-                  className="rounded-md p-1 transition hover:bg-black/10"
-                  title="Editar informações"
                 >
-                  <Pencil size={16} />
+                  <Pencil size={14}></Pencil>
                 </button>
-              </div>
-            )}
-
-            {/* CAMPO DE EDIÇÃO */}
-            {editandoInfo && (
-              <div className="mt-3 w-125 max-w-full">
+              )}
+            </div>
+            {editandoInfo ? (
+              <div className="w-fit">
                 <textarea
-                  value={informacoes}
-                  onChange={(e) => setInformacoes(e.target.value)}
-                  placeholder="Escreva algumas informações sobre você..."
-                  maxLength={300}
-                  rows={4}
-                  className={`w-full resize-none rounded-lg border p-3 transition outline-none ${
+                  cols={20}
+                  rows={5}
+                  maxLength={500}
+                  className={`text-violet-white rounded-lg border-2 shadow-[0_0_5px] shadow-gray-600 focus:outline focus:outline-white ${
                     tema?.temaEscuro
-                      ? "border-violet-700 bg-[#211b2b] text-white placeholder:text-gray-400 focus:border-violet-400"
-                      : "border-violet-200 bg-white text-violet-950 placeholder:text-gray-400 focus:border-violet-500"
+                      ? "border-violet-950 bg-violet-500"
+                      : "bg-slate-100"
                   }`}
-                />
-
-                <div className="mt-2 flex gap-2">
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                ></textarea>
+                <div className="flex justify-end gap-2">
                   <button
-                    onClick={salvarInformacoes}
-                    className="rounded-lg bg-violet-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-800"
-                  >
-                    Salvar
-                  </button>
-
-                  <button
-                    onClick={cancelarEdicao}
-                    className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
-                      tema?.temaEscuro
-                        ? "bg-gray-700 text-white hover:bg-gray-600"
-                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                    }`}
+                    className="cursor-pointer rounded-lg bg-red-900 px-4 py-1 text-sm text-white hover:bg-violet-950"
+                    onClick={() => setEditandoInfo(false)}
                   >
                     Cancelar
                   </button>
+                  <button
+                    className="cursor-pointer rounded-lg bg-violet-900 px-4 py-1 text-sm text-white hover:bg-violet-950"
+                    onClick={editarBio}
+                  >
+                    Salvar
+                  </button>
                 </div>
-
-                <p
-                  className={`mt-1 text-right text-xs ${
-                    tema?.temaEscuro ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  {informacoes.length}/300
-                </p>
+              </div>
+            ):(
+              <div className="">
+                <h2 className="text-sm">{dados?.bio}</h2>
               </div>
             )}
           </div>
@@ -404,8 +395,8 @@ export default function Perfil() {
                   />
 
                   <div className="absolute top-3 right-3 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-white">
-                    {jogo.rating}
                     <Star size={17} fill="#F1C338" color="#F1C338" />
+                    {jogo.rating}
                   </div>
                 </div>
 

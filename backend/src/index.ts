@@ -219,7 +219,32 @@ app.delete("/jogosdel/:rawgId", async (req, res) => {
   }
 });
 
-app.patch("/perfil", async (req, res) => {
+app.patch("/editbio", async (req, res) => {
+  const { bio } = req.body;
+
+  const userId = req.session.usuarioId;
+
+  if (!userId) {
+    return res.status(401).json({ erro: "Não logado" });
+  }
+
+  try {
+    const usuario = await prisma.usuario.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        bio: bio,
+      },
+    });
+
+    return res.json(usuario);
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno no Servidor" });
+  }
+});
+
+app.patch("/editfotos", async (req, res) => {
   const { fotoPerfil, banner } = req.body;
 
   const userId = req.session.usuarioId;
@@ -242,6 +267,127 @@ app.patch("/perfil", async (req, res) => {
     return res.json(usuario);
   } catch (error) {
     res.status(500).json({ error: "Erro interno no Servidor" });
+  }
+});
+
+app.patch("/editinfo", async (req, res) => {
+  const userId = req.session.usuarioId;
+  const { campo, valor, senhaAtual } = req.body;
+  const camposPermitidos = ["nome", "nick", "email"];
+
+  if (!camposPermitidos.includes(campo)) {
+    return res.status(400).json({
+      erro: "Campo inválido",
+    });
+  }
+
+  if (!userId) {
+    return res.status(401).json({ erro: "Não logado" });
+  }
+
+  try {
+    const testsenha = await prisma.usuario.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!testsenha) {
+      return res.status(401).json({ erro: "Erro inesperado" });
+    }
+
+    const resultado = await bcrypt.compare(senhaAtual, testsenha.senha);
+
+    if (!resultado) {
+      return res.status(401).json({
+        erro: "Senha Incorreta",
+      });
+    }
+
+    const usuario = await prisma.usuario.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        [campo]: valor,
+      },
+    });
+
+    return res.status(200).json({
+      mensagem: "Alteração realizada com sucesso!",
+      usuario: {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        nick: usuario.nick,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno no Servidor" });
+  }
+});
+
+app.patch("/editsenha", async (req, res) => {
+  const userId = req.session.usuarioId;
+  const { senhaAtual, novaSenha } = req.body;
+
+  if (!userId) {
+    return res.status(401).json({
+      erro: "Não logado",
+    });
+  }
+
+  if (!senhaAtual || !novaSenha) {
+    return res.status(400).json({
+      erro: "Preencha todos os campos",
+    });
+  }
+
+  try {
+    const usuario = await prisma.usuario.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({
+        erro: "Usuário não encontrado",
+      });
+    }
+
+    const senhaCorreta = await bcrypt.compare(
+      senhaAtual,
+      usuario.senha
+    );
+
+    if (!senhaCorreta) {
+      return res.status(401).json({
+        erro: "Senha atual incorreta",
+      });
+    }
+
+    const novaSenhaHash = await bcrypt.hash(novaSenha, 12);
+
+    await prisma.usuario.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        senha: novaSenhaHash,
+      },
+    });
+
+    return res.json({
+      mensagem: "Senha alterada com sucesso!",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      erro: "Erro interno no servidor",
+    });
   }
 });
 
@@ -302,6 +448,8 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erro interno no Servidor" });
   }
 });
+
+
 
 app.post("/usuarios", async (req, res) => {
   const { nome, email, senha, nick } = req.body;

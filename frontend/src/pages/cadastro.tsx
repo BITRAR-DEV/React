@@ -1,6 +1,6 @@
 import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { Eye, EyeOff, Moon, Sun } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useTema } from "../contexts/ThemeContext";
 
