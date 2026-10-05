@@ -1,5 +1,5 @@
-import { useParams, Navigate, useNavigate } from "react-router-dom";
-import { use, useContext, useEffect, useRef, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useTema } from "../contexts/ThemeContext";
 import { Eye, EyeOff, X } from "lucide-react";
@@ -16,9 +16,7 @@ export default function Cadastro() {
   
   const tema = useTema();
   const [mostrar, setMostrar] = useState(false);
-  const [erro, setErro] = useState("");
-  const [senhaerro, setSenhaErro] = useState(false);
-  
+  const [erro, setErro] = useState("");  
   
   type CampoEditavel = "nome" | "nick" | "email" | "senha";
   
@@ -408,13 +406,6 @@ export default function Cadastro() {
                             setForm({ ...form, csenha: e.target.value })
                           }
                         />
-
-                        {senhaerro && (
-                          <p className="pl-2 text-red-600">
-                            As senhas não coincidem!
-                          </p>
-                        )}
-
                         {erro && <p className="pl-2 text-red-600">{erro}</p>}
                       </div>
                       <button className="mt-2 cursor-pointer rounded-lg bg-violet-900 px-6 py-2 text-white hover:bg-violet-950">

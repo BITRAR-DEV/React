@@ -1,4 +1,4 @@
-import { NavLink, Navigate, useNavigate } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
@@ -14,7 +14,6 @@ export default function Cadastro() {
   const auth = useContext(AuthContext);
   const tema = useTema();
 
-  const navigate = useNavigate();
   const [mostrar, setMostrar] = useState(false);
 
   const [form, setForm] = useState({

@@ -20,8 +20,6 @@ export default function Perfil() {
   const tema = useTema();
   const [edicaoPerm, setEdicaoPerm] = useState(false);
   const [editandoInfo, setEditandoInfo] = useState(false);
-  const [informacoes, setInformacoes] = useState("");
-  const [textoInformacoes, setTextoInformacoes] = useState("");
 
   useEffect(() => {
     if (nick === auth?.usuario?.nick) {
